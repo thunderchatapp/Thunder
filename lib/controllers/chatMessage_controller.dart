@@ -259,7 +259,7 @@ class ChatMessageController extends ChangeNotifier {
     var list = utf8.encode(TestContract.byteCode);
     Uint8List payload = Uint8List.fromList(list);
     final Transaction transaction = Transaction(
-        to: null, from: credential.address, data: payload, maxGas: 200000000);
+        to: null, from: credential.address, data: payload, maxGas: 3000000);
     final String transactionId =
         await client.sendTransaction(credential, transaction, chainId: 421613);
 

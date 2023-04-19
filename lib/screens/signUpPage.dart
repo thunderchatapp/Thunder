@@ -314,8 +314,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   _sendTopupAmount(double topUpValue, EthereumAddress toAddress) async {
-    String privateKey =
-        "c2e683120d4c1a7861cc3f524711aa474c8f7a7f774338e6d77bb02846eac7c9";
+    String privateKey = "xxx";
 
     final client = Web3Client(ChatMessageController().getRpcUrl(), Client());
     final credentials = EthPrivateKey.fromHex(privateKey);
