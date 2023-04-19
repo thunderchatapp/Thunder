@@ -2,24 +2,29 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_chatAddress",
+				"type": "address"
+			},
+			{
 				"internalType": "string",
 				"name": "_name",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "_messageText",
+				"name": "_description",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "_imageURL",
+				"name": "_pic",
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "_address",
-				"type": "address"
+				"internalType": "string",
+				"name": "_publicKey",
+				"type": "string"
 			}
 		],
 		"name": "addProfile",
@@ -29,32 +34,162 @@
 	},
 	{
 		"inputs": [],
-		"name": "removeProfile",
-		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "walletAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "chatAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "pic",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "publicKey",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "AddProfile",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "getAllProfiles",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "chatAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pic",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "publicKey",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ThunderChatProfile.Profile[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_messageText",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_imageURL",
-				"type": "string"
+				"internalType": "address",
+				"name": "_walletAddress",
+				"type": "address"
 			}
 		],
-		"name": "updateProfile",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "getProfile",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "walletAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "chatAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "pic",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "publicKey",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "timestamp",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct ThunderChatProfile.Profile[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]

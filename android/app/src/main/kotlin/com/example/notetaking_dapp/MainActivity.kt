@@ -1,4 +1,4 @@
-package com.example.notetaking_dapp
+package com.example.thunder
 
 import io.flutter.embedding.android.FlutterActivity
 

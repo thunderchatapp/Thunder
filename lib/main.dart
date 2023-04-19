@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/screens/homePage.dart';
+import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:provider/provider.dart';
 import 'controllers/chatMessage_controller.dart';
 
@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        //home: HomePage(),
+        home: SignUpScreen(),
       ),
     );
   }

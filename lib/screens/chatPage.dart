@@ -8,6 +8,11 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  String _address = '';
+  String rpcUrl =
+      "https://arb-goerli.g.alchemy.com/v2/UwhVeEHZvLPiIEOyjNaO4GtkvPahZUVV";
+  String _balance = '';
+
   List<ChatUsers> chatUsers = [
     ChatUsers(
         name: "Jane Russel",
@@ -68,7 +73,7 @@ class _ChatPageState extends State<ChatPage> {
                     Text(
                       "Thunder",
                       style:
-                          TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Container(
                       padding:
