@@ -1,6 +1,9 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/models/chatUsersModel.dart';
+import 'package:flutter_app/models/chatProfileModel.dart';
 import 'package:flutter_app/widgets/conversationList.dart';
+import 'package:flutter_app/controllers/chatMessage_controller.dart';
+import 'package:flutter_app/screens/addFriendByQRScan.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -8,56 +11,21 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  String _address = '';
-  String rpcUrl =
-      "https://arb-goerli.g.alchemy.com/v2/UwhVeEHZvLPiIEOyjNaO4GtkvPahZUVV";
-  String _balance = '';
+  late ChatMessageController chatMessageController;
+  late List<ChatProfile> friendList = [];
 
-  List<ChatUsers> chatUsers = [
-    ChatUsers(
-        name: "Jane Russel",
-        messageText: "Awesome Setup",
-        imageURL: "https://picsum.photos/250?image=9",
-        time: "Now"),
-    ChatUsers(
-        name: "Glady's Murphy",
-        messageText: "That's Great",
-        imageURL: "https://picsum.photos/250?image=19",
-        time: "Yesterday"),
-    ChatUsers(
-        name: "Jorge Henry",
-        messageText: "Hey where are you?",
-        imageURL: "https://picsum.photos/250?image=29",
-        time: "31 Mar"),
-    ChatUsers(
-        name: "Philip Fox",
-        messageText: "Busy! Call me in 20 mins",
-        imageURL: "https://picsum.photos/250?image=39",
-        time: "28 Mar"),
-    ChatUsers(
-        name: "Debra Hawkins",
-        messageText: "Thankyou, It's awesome",
-        imageURL: "https://picsum.photos/250?image=49",
-        time: "23 Mar"),
-    ChatUsers(
-        name: "Jacob Pena",
-        messageText: "will update you in evening",
-        imageURL: "https://picsum.photos/250?image=59",
-        time: "17 Mar"),
-    ChatUsers(
-        name: "Andrey Jones",
-        messageText: "Can you please share the file?",
-        imageURL: "https://picsum.photos/250?image=69",
-        time: "24 Feb"),
-    ChatUsers(
-        name: "John Wick",
-        messageText: "How are you?",
-        imageURL: "https://picsum.photos/250?image=79",
-        time: "18 Feb"),
-  ];
+  void _openAddFriendScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddFriendByQRScan()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    chatMessageController = Provider.of<ChatMessageController>(context);
+    friendList = chatMessageController.friendList;
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -73,34 +41,36 @@ class _ChatPageState extends State<ChatPage> {
                     Text(
                       "Thunder",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    Container(
-                      padding:
-                          EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 2),
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.pink[50],
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.add,
-                            color: Colors.pink,
-                            size: 20,
+                    GestureDetector(
+                        onTap: _openAddFriendScreen,
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 8, right: 8, top: 2, bottom: 2),
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.pink[50],
                           ),
-                          SizedBox(
-                            width: 2,
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.add,
+                                color: Colors.pink,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Text(
+                                "Add Friend",
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Text(
-                            "Add New",
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    )
+                        ))
                   ],
                 ),
               ),
@@ -126,17 +96,13 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
             ListView.builder(
-              itemCount: chatUsers.length,
+              itemCount: friendList.length,
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 16),
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return ConversationList(
-                  name: chatUsers[index].name,
-                  messageText: chatUsers[index].messageText,
-                  imageUrl: chatUsers[index].imageURL,
-                  time: chatUsers[index].time,
-                  isMessageRead: (index == 0 || index == 3) ? true : false,
+                  receiverProfile: friendList[index],
                 );
               },
             ),

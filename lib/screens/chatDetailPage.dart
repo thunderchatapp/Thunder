@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_app/models/chatProfileModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/chatMessage.dart';
@@ -6,30 +7,40 @@ import 'package:flutter_app/controllers/chatMessage_controller.dart';
 import 'package:provider/provider.dart';
 
 class ChatDetailPage extends StatefulWidget {
+  late ChatProfile friendProfile;
+  ChatDetailPage(ChatProfile receiverProfile) {
+    friendProfile = receiverProfile;
+  }
+
   @override
-  _ChatDetailPageState createState() => _ChatDetailPageState();
+  _ChatDetailPageState createState() => _ChatDetailPageState(friendProfile);
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
   late ChatMessageController chatMessageController;
   late TextEditingController messageCtrl;
+  late ChatProfile friendProfile;
+
+  _ChatDetailPageState(ChatProfile receiverProfile) {
+    friendProfile = receiverProfile;
+  }
 
   @override
   void initState() {
     super.initState();
-
     messageCtrl = TextEditingController(text: "");
   }
 
-  handleCreateNote() async {
+  handleSendMessage() async {
     var message = messageCtrl.text;
     messageCtrl.text = "";
-    await chatMessageController.sendMessage(message);
+    await chatMessageController.sendMessage(message, friendProfile);
   }
 
   @override
   Widget build(BuildContext context) {
     chatMessageController = Provider.of<ChatMessageController>(context);
+    chatMessageController.getMessages(friendProfile);
     chatMessageController.chatMessages
         .sort((a, b) => a.created.compareTo(b.created));
     return Scaffold(
@@ -55,8 +66,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   width: 2,
                 ),
                 CircleAvatar(
-                  backgroundImage:
-                      NetworkImage("https://picsum.photos/250?image=9"),
+                  backgroundImage: NetworkImage(friendProfile.pic),
                   maxRadius: 20,
                 ),
                 SizedBox(
@@ -68,7 +78,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "Kriss Benwat",
+                        friendProfile.name,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
@@ -110,7 +120,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       child: Align(
                         alignment:
                             (chatMessageController.chatMessages[index].type ==
-                                    "receiver"
+                                    "received"
                                 ? Alignment.topLeft
                                 : Alignment.topRight),
                         child: Container(
@@ -118,7 +128,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                             borderRadius: BorderRadius.circular(20),
                             color: (chatMessageController
                                         .chatMessages[index].type ==
-                                    "receiver"
+                                    "received"
                                 ? Colors.grey.shade200
                                 : Colors.blue[200]),
                           ),
@@ -175,7 +185,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   FloatingActionButton(
                     onPressed: () {
-                      handleCreateNote();
+                      handleSendMessage();
                     },
                     child: Icon(
                       Icons.send,

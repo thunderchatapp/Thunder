@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
+import 'package:ethers/signers/wallet.dart' as w;
 import 'package:flutter_app/screens/homePage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'package:flutter_app/controllers/chatMessage_controller.dart';
 import 'package:flutter_app/controllers/chatProfile_controller.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter_app/models/chatProfileModel.dart';
+import 'package:flutter_app/appconfig.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart';
@@ -30,6 +33,9 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   String _result = '';
   bool logoutVisible = false;
+  final config = AppConfig();
+  bool _isLoading = false; //bool variable created.
+  String loadingText = "Loading"; //bool variable created
 
   @override
   void dispose() {
@@ -48,6 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     themeMap['primary'] = "#229954";
 
     Uri redirectUrl;
+
     if (Platform.isAndroid) {
       redirectUrl = Uri.parse('w3a://com.example.thunder/auth');
     } else if (Platform.isIOS) {
@@ -57,7 +64,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     await Web3AuthFlutter.init(Web3AuthOptions(
-        clientId: 'XXX-5stw6em84c',
+        clientId: config.web3AuthClientID,
         network: Network.testnet,
         redirectUrl: redirectUrl,
         whiteLabel: WhiteLabelData(
@@ -87,10 +94,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       flex: 1,
                       child: Image.asset(
                         'assets\\thunder_logo.png',
-                        height: 160,
+                        height: 250,
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 1),
                     Text(
                       'Let\'s get started',
                       style: TextStyle(
@@ -127,9 +134,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: SvgPicture.asset(
                               "assets/login-google.svg",
+                              height: 50,
                             ),
                           ),
-                          SizedBox(width: 16.0),
+                          SizedBox(width: 20.0),
                           GestureDetector(
                             onTap: () {
                               // Handle Facebook login button click
@@ -145,9 +153,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: SvgPicture.asset(
                               "assets/login-facebook.svg",
+                              height: 50,
                             ),
                           ),
-                          SizedBox(width: 16.0),
+                          SizedBox(width: 20.0),
                           GestureDetector(
                             onTap: () {
                               // Handle Google login button click
@@ -164,6 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             },
                             child: SvgPicture.asset(
                               "assets/login-twitter.svg",
+                              height: 50,
                             ),
                           ),
                         ],
@@ -222,7 +232,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('privateKey', response.privKey.toString());
-      await _setUp();
+      await _setUp("");
+
       setState(() {
         _result = response.toString();
         logoutVisible = true;
@@ -277,20 +288,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Web3AuthFlutter.login(LoginParams(loginProvider: Provider.discord));
   }
 
-  Future<EtherAmount> _setUp() async {
-    ChatMessageController chatMessageController = ChatMessageController();
-    final prefs = await SharedPreferences.getInstance();
-    final privateKey = prefs.getString('privateKey') ?? '0';
+  Future<EtherAmount> _setUp(String privateKey) async {
+    //String privateKey;
+    if (privateKey == "") {
+      final prefs = await SharedPreferences.getInstance();
+      privateKey = prefs.getString('privateKey') ?? '0';
+    }
 
-    final client = Web3Client(ChatMessageController().getRpcUrl(), Client());
+    final client = Web3Client(config.rpcUrl, Client());
     final credentials = EthPrivateKey.fromHex(privateKey);
     final address = credentials.address;
+    //final publicKey = credentials.publicKey;
     final balance = await client.getBalance(address);
+    final walletPrivateKey = w.Wallet.fromPrivateKey(privateKey);
+    String publicKey;
+    final _publicKey = walletPrivateKey.signingKey?.publicKey;
+    if (_publicKey != null) {
+      publicKey = _publicKey.substring(2);
+    } else {
+      publicKey = "";
+    }
 
-    debugPrint(address.toString());
-    debugPrint(privateKey.toString());
-    debugPrint(balance.toString());
-
+    debugPrint("Wallet Address: $address");
+    debugPrint("Wallet Public Key: $publicKey");
+    debugPrint("Wallet Private Key: $privateKey");
+    debugPrint("Wallet Balance: $balance");
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: "thunder", value: privateKey);
     BigInt weiValue = balance.getInWei; // 1 ether = 10^18 Wei
     double ethValue = weiValue.toDouble() / BigInt.from(pow(10, 18)).toDouble();
 
@@ -300,23 +324,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       double topUpValue = 0.05;
       _sendTopupAmount(topUpValue, address);
     }
-    ChatProfileController cpc = ChatProfileController();
-
-    ChatProfile? profile = cpc.chatProfile;
-
-    debugPrint(profile.toString());
-    if (profile == null) {
-      debugPrint("Need to create chat contract and profile");
-      chatMessageController.createChatApp();
-    }
 
     return balance;
   }
 
   _sendTopupAmount(double topUpValue, EthereumAddress toAddress) async {
-    String privateKey = "xxx";
+    String privateKey = config.thunderContractAddressPK;
 
-    final client = Web3Client(ChatMessageController().getRpcUrl(), Client());
+    final client = Web3Client(config.rpcUrl, Client());
     final credentials = EthPrivateKey.fromHex(privateKey);
     final fromAddress = credentials.address;
     try {

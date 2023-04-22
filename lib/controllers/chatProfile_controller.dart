@@ -8,36 +8,36 @@ import 'package:web3dart/web3dart.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:ethers/signers/wallet.dart' as w;
 import 'package:flutter_app/models/chatProfileModel.dart';
+import 'package:flutter_app/appconfig.dart';
 
 class ChatProfileController {
   bool isLoading = true;
-  ChatProfile? chatProfile;
+  late ChatProfile chatProfile;
 
   late Web3Client _client;
   late String _abiCode;
   late Credentials _credentials;
 
-  late String _myProfilePrivateKey;
-  late String _myProfilePublicKey;
-  late EthereumAddress _myProfileAddress;
+  late String _myPrivateKey;
+  late String _myPublicKey;
+  late EthereumAddress _myAddress;
   late DeployedContract _profileContract;
   late EthereumAddress _contractProfileAddress;
 
   //late ContractFunction _addProfile;
   //late ContractFunction _getAllProfiles;
   late ContractFunction _getProfile;
+  final config = AppConfig();
 
   ChatProfileController() {
     init();
   }
   init() async {
-    _client = Web3Client(ChatMessageController().getRpcUrl(), Client(),
-        socketConnector: () {
-      return IOWebSocketChannel.connect(ChatMessageController().getWsUrl())
-          .cast<String>();
+    _client = Web3Client(config.rpcUrl, Client(), socketConnector: () {
+      return IOWebSocketChannel.connect(config.wsUrl).cast<String>();
     });
     _contractProfileAddress =
-        EthereumAddress.fromHex("0x4CB07C6e11FdA6748D0865cCBd1077ddc0c04DD2");
+        EthereumAddress.fromHex(config.profileContractAddress);
 
     await getAbi();
     await getCreadentials();
@@ -56,16 +56,16 @@ class ChatProfileController {
 
   Future<void> getCreadentials() async {
     final prefs = await SharedPreferences.getInstance();
-    _myProfilePrivateKey = prefs.getString('privateKey') ?? '0';
-    _credentials = EthPrivateKey.fromHex(_myProfilePrivateKey);
-    _myProfileAddress = _credentials.address;
-    final walletPrivateKey = w.Wallet.fromPrivateKey(_myProfilePrivateKey!);
+    _myPrivateKey = prefs.getString('privateKey') ?? '0';
+    _credentials = EthPrivateKey.fromHex(_myPrivateKey);
+    _myAddress = _credentials.address;
+    final walletPrivateKey = w.Wallet.fromPrivateKey(_myPrivateKey);
 
     final publicKey = walletPrivateKey.signingKey?.publicKey;
     if (publicKey != null) {
-      _myProfilePublicKey = publicKey.substring(2);
+      _myPublicKey = publicKey.substring(2);
     } else {
-      _myProfilePublicKey = "";
+      _myPublicKey = "";
     }
   }
 
@@ -113,28 +113,42 @@ class ChatProfileController {
   }
 */
   getProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    _myPrivateKey = prefs.getString('privateKey') ?? '0';
+    _credentials = EthPrivateKey.fromHex(_myPrivateKey);
+    _myAddress = _credentials.address;
+    final walletPrivateKey = w.Wallet.fromPrivateKey(_myPrivateKey);
+
+    final publicKey = walletPrivateKey.signingKey?.publicKey;
+    if (publicKey != null) {
+      _myPublicKey = publicKey.substring(2);
+    } else {
+      _myPublicKey = "";
+    }
+
+    _profileContract = DeployedContract(
+        ContractAbi.fromJson(_abiCode, "ThunderChatProfile"),
+        _contractProfileAddress);
+
+    //_addProfile = _profileContract.function("addProfile");
+    //_getAllProfiles = _profileContract?.function("getAllProfiles");
+    _getProfile = _profileContract.function("getProfile");
+
     List<dynamic> result = await _client.call(
       contract: _profileContract,
       function: _getProfile,
-      params: [_myProfileAddress],
+      params: [_myAddress],
     );
 
-    if (result == null) {
-      chatProfile = null;
-    } else {
-      if (result[0][0][6].toInt() == 0) {
-        chatProfile = null;
-      }
-      int createdInt = (result[0][0][6]).toInt();
+    int createdInt = (result[0][0][6]).toInt();
 
-      chatProfile = ChatProfile(
-          walletAddress: result[0][0][0],
-          chatAddress: result[0][0][1],
-          name: result[0][0][2],
-          description: result[0][0][3],
-          pic: result[0][0][4],
-          publicKey: result[0][0][5],
-          created: DateTime.fromMillisecondsSinceEpoch(createdInt * 1000));
-    }
+    chatProfile = ChatProfile(
+        walletAddress: result[0][0][0],
+        chatAddress: result[0][0][1],
+        name: result[0][0][2],
+        description: result[0][0][3],
+        pic: result[0][0][4],
+        publicKey: result[0][0][5],
+        created: DateTime.fromMillisecondsSinceEpoch(createdInt * 1000));
   }
 }

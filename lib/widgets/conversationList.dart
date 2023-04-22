@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/models/chatProfileModel.dart';
 import 'package:flutter_app/screens/chatDetailPage.dart';
+import 'package:flutter_app/controllers/chatMessage_controller.dart';
 
 class ConversationList extends StatefulWidget {
-  String name;
-  String messageText;
-  String imageUrl;
-  String time;
-  bool isMessageRead;
-  ConversationList(
-      {required this.name,
-      required this.messageText,
-      required this.imageUrl,
-      required this.time,
-      required this.isMessageRead});
+  ChatProfile receiverProfile;
+  ConversationList({required this.receiverProfile});
   @override
   _ConversationListState createState() => _ConversationListState();
 }
@@ -23,7 +16,7 @@ class _ConversationListState extends State<ConversationList> {
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ChatDetailPage();
+          return ChatDetailPage(widget.receiverProfile);
         }));
       },
       child: Container(
@@ -34,7 +27,7 @@ class _ConversationListState extends State<ConversationList> {
               child: Row(
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundImage: NetworkImage(widget.imageUrl),
+                    backgroundImage: NetworkImage(widget.receiverProfile.pic),
                     maxRadius: 30,
                   ),
                   SizedBox(
@@ -47,18 +40,18 @@ class _ConversationListState extends State<ConversationList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            widget.name,
+                            widget.receiverProfile.name,
                             style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(
                             height: 6,
                           ),
                           Text(
-                            widget.messageText,
+                            widget.receiverProfile.lastMessage,
                             style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey.shade600,
-                                fontWeight: widget.isMessageRead
+                                fontWeight: widget.receiverProfile.isMessageRead
                                     ? FontWeight.bold
                                     : FontWeight.normal),
                           ),
@@ -68,14 +61,6 @@ class _ConversationListState extends State<ConversationList> {
                   ),
                 ],
               ),
-            ),
-            Text(
-              widget.time,
-              style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: widget.isMessageRead
-                      ? FontWeight.bold
-                      : FontWeight.normal),
             ),
           ],
         ),

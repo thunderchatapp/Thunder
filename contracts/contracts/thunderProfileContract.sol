@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity 0.8.18;
 contract ThunderProfileContract {
   
   address private owner;
@@ -19,6 +19,7 @@ contract ThunderProfileContract {
   mapping (address => bool) private isProfilelistAddress;
 
   event AddProfile(address walletAddress, address chatAddress, string name, string description, string pic, string publicKey, uint timestamp);
+  event UpdateProfile(address walletAddress, address chatAddress, string name, string description, string pic, string publicKey, uint timestamp);
   
   modifier onlyOwner() {
       require(msg.sender == owner, "Only the contract owner can call this function.");
@@ -55,5 +56,23 @@ contract ThunderProfileContract {
     }
     return info;
   }
+
+  function updateProfile(address _chatAddress, string calldata _name, string calldata _description, string calldata _pic, string calldata _publicKey) public {
+    require(isProfilelistAddress[msg.sender], "Profile does not exist.");
+    
+    for (uint i = 0; i < profiles.length; i++) {
+        if (profiles[i].walletAddress == msg.sender) {
+            profiles[i].chatAddress = _chatAddress;
+            profiles[i].name = _name;
+            profiles[i].description = _description;
+            profiles[i].pic = _pic;
+            profiles[i].publicKey = _publicKey;
+            profiles[i].timestamp = block.timestamp;
+            break;
+        }
+    }
+
+    emit UpdateProfile(msg.sender, _chatAddress, _name, _description, _pic, _publicKey, block.timestamp);
+}
   
 }

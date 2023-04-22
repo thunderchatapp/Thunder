@@ -49,7 +49,9 @@ dependencies:
   flutter_svg: ^2.0.5
   shared_preferences: ^2.1.0
   flutter_web3: ^2.1.9
-
+  qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.0.0
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:

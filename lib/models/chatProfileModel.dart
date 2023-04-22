@@ -9,6 +9,14 @@ class ChatProfile {
   final String pic;
   final String publicKey;
   final DateTime created;
+  final bool isMessageRead;
+  late final String lastMessage;
+
+  String get getLastMessage => lastMessage;
+
+  set setLastMessage(String value) {
+    lastMessage = value;
+  }
 
   ChatProfile(
       {required this.walletAddress,
@@ -17,7 +25,9 @@ class ChatProfile {
       required this.description,
       required this.pic,
       required this.publicKey,
-      required this.created});
+      required this.created,
+      this.isMessageRead = true,
+      this.lastMessage = ""});
 
   ChatProfile.fromJson(Map<String, dynamic> json)
       : walletAddress = json['walletAddress'],
@@ -26,7 +36,9 @@ class ChatProfile {
         description = json['description'],
         pic = json['pic'],
         publicKey = json['publicKey'],
-        created = json['created'];
+        created = json['created'],
+        isMessageRead = json['isMessageRead'],
+        lastMessage = json['lastMessage'];
 
   Map<String, dynamic> toJson() => {
         "walletAddress": walletAddress,
@@ -36,5 +48,7 @@ class ChatProfile {
         "pic": pic,
         "publicKey": publicKey,
         "created": created,
+        "isMessageRead": isMessageRead,
+        "lastMessage": lastMessage,
       };
 }
