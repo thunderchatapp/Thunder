@@ -378,9 +378,13 @@ class ChatMessageController extends ChangeNotifier {
     );
 
     if (resultLastMessage[0][0] != null) {
-      List a = resultLastMessage[0];
-      lastMessage =
-          decrypt(_myPrivateKey, resultLastMessage[0][a.length - 1][2]);
+      try {
+        List a = resultLastMessage[0];
+        lastMessage =
+            decrypt(_myPrivateKey, resultLastMessage[0][a.length - 1][2]);
+      } catch (e) {
+        lastMessage = "";
+      }
     } else {
       lastMessage = "";
     }
