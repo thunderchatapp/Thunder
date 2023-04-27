@@ -9,6 +9,7 @@ import 'package:flutter_app/screens/addFriendByQRScan.dart';
 import 'package:http/http.dart';
 import 'package:flutter_app/models/chatMessage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:ethers/signers/wallet.dart' as w;
 import 'package:audioplayers/audioplayers.dart';
@@ -71,10 +72,11 @@ class ChatMessageController extends ChangeNotifier {
     await getCreadentials();
     await getMyProfile();
     await getDeployedThunderChatContract();
-    await getFriendList();
+    //await getFriendList();
 
     //await getDeployedReceiverContract();
     //await getMessages();
+    isLoading = false;
   }
 
   Future<void> getCreadentials() async {
@@ -120,6 +122,7 @@ class ChatMessageController extends ChangeNotifier {
     } else {
       boolFirstLoad = true;
     }
+
     List<dynamic> result = await _client.call(
       contract: _myChatContract,
       function: _getMessages,
@@ -165,8 +168,6 @@ class ChatMessageController extends ChangeNotifier {
         }
       }
     }
-
-    isLoading = false;
 
     notifyListeners();
 
@@ -238,7 +239,6 @@ class ChatMessageController extends ChangeNotifier {
   }
 
   sendMessage(String content, ChatProfile friendProfile) async {
-    isLoading = true;
     notifyListeners();
 
     ChatMessage message = ChatMessage(
@@ -338,6 +338,7 @@ class ChatMessageController extends ChangeNotifier {
   }
 
   getFriendList() async {
+    bool found;
     List<dynamic> result = await _client.call(
       contract: _myChatContract,
       function: _getAllFriends,
@@ -346,7 +347,21 @@ class ChatMessageController extends ChangeNotifier {
 
     for (var msg in result[0]) {
       await getFriendProfile(msg[0]);
-      friendList.add(_friendProfile);
+      found = false;
+      for (int i = 0; i < friendList.length; i++) {
+        if (friendList[i].walletAddress == _friendProfile.walletAddress) {
+          if (friendList[i].lastMessage != _friendProfile.lastMessage) {
+            friendList[i].setLastMessage = _friendProfile.lastMessage;
+          }
+
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        friendList.add(_friendProfile);
+      }
     }
 
     notifyListeners();
@@ -377,9 +392,10 @@ class ChatMessageController extends ChangeNotifier {
       params: [result[0][0][0]],
     );
 
-    if (resultLastMessage[0][0] != null) {
+    List a = resultLastMessage[0];
+
+    if (a.isNotEmpty) {
       try {
-        List a = resultLastMessage[0];
         lastMessage =
             decrypt(_myPrivateKey, resultLastMessage[0][a.length - 1][2]);
       } catch (e) {

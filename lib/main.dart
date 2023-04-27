@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/signUpPage.dart';
 import 'package:flutter_app/screens/homePage.dart';
+import 'package:flutter_app/screens/splashPage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/chatMessage_controller.dart';
@@ -58,8 +59,10 @@ class _CheckLoginState extends State<CheckLogin> {
     }
   }
 
+  late ChatMessageController chatMessageController;
   @override
   Widget build(BuildContext context) {
+    chatMessageController = Provider.of<ChatMessageController>(context);
     if (loading) {
       return Scaffold(
         body: Center(
@@ -68,7 +71,7 @@ class _CheckLoginState extends State<CheckLogin> {
       );
     } else {
       if (loggedIn) {
-        return HomePage();
+        return SplashPage();
       } else {
         return SignUpScreen();
       }

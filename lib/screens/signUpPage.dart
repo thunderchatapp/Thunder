@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:ethers/signers/wallet.dart' as w;
 import 'package:flutter_app/screens/homePage.dart';
+import 'package:flutter_app/screens/splashPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:web3auth_flutter/enums.dart';
@@ -240,7 +241,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) {
-          return HomePage();
+          return SplashPage();
         }));
       });
     } on UserCancelledException {

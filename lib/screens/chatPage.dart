@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/chatProfileModel.dart';
@@ -22,8 +24,14 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     chatMessageController = Provider.of<ChatMessageController>(context);
+    chatMessageController.getFriendList();
     friendList = chatMessageController.friendList;
 
     return Scaffold(

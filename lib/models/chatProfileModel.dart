@@ -10,7 +10,7 @@ class ChatProfile {
   final String publicKey;
   final DateTime created;
   final bool isMessageRead;
-  late final String lastMessage;
+  late String lastMessage;
 
   String get getLastMessage => lastMessage;
 
