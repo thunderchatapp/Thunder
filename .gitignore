@@ -43,5 +43,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-config.dart
-lib/appconfig.dart
+/lib/appconfig.dart

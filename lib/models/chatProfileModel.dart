@@ -1,54 +1,59 @@
 import 'package:flutter/cupertino.dart';
+import 'package:thunder_chat/models/friendProfile.dart';
 import 'package:web3dart/web3dart.dart';
 
 class ChatProfile {
-  final EthereumAddress walletAddress;
-  final EthereumAddress chatAddress;
-  final String name;
-  final String description;
-  final String pic;
-  final String publicKey;
-  final DateTime created;
-  final bool isMessageRead;
-  late String lastMessage;
+  EthereumAddress walletAddress;
+  String userId;
+  String name;
+  String description;
+  String photoURL;
+  String referrerCode;
+  String referredBy;
+  String publicKey;
 
-  String get getLastMessage => lastMessage;
+  DateTime created;
 
-  set setLastMessage(String value) {
-    lastMessage = value;
-  }
+  bool isRequestSending;
+  List<FriendProfile> friendList = [];
 
   ChatProfile(
       {required this.walletAddress,
-      required this.chatAddress,
+      required this.userId,
       required this.name,
       required this.description,
-      required this.pic,
+      required this.photoURL,
+      required this.referrerCode,
+      required this.referredBy,
       required this.publicKey,
       required this.created,
-      this.isMessageRead = true,
-      this.lastMessage = ""});
+      this.isRequestSending = false});
 
   ChatProfile.fromJson(Map<String, dynamic> json)
-      : walletAddress = json['walletAddress'],
-        chatAddress = json['chatAddress'],
+      : walletAddress = EthereumAddress.fromHex(json['walletAddress']),
+        userId = json['userId'],
         name = json['name'],
         description = json['description'],
-        pic = json['pic'],
+        photoURL = json['photoURL'],
+        referrerCode = json['referrerCode'],
+        referredBy = json['referredBy'],
         publicKey = json['publicKey'],
-        created = json['created'],
-        isMessageRead = json['isMessageRead'],
-        lastMessage = json['lastMessage'];
+        created = DateTime.parse(json['created']),
+        isRequestSending = json['isRequestSending'],
+        friendList = List<FriendProfile>.from((json['friendList'] ?? [])
+            .map((friendJson) => FriendProfile.fromJson(friendJson)));
 
   Map<String, dynamic> toJson() => {
-        "walletAddress": walletAddress,
-        "chatAddress": chatAddress,
+        "walletAddress": walletAddress.hexEip55,
+        "userId": userId,
         "name": name,
         "description": description,
-        "pic": pic,
+        "photoURL": photoURL,
+        "referrerCode": referrerCode,
+        "referredBy": referredBy,
         "publicKey": publicKey,
-        "created": created,
-        "isMessageRead": isMessageRead,
-        "lastMessage": lastMessage,
+        'created': created.toIso8601String(), // Convert DateTime to string
+        "isRequestSending": isRequestSending,
+        'friendList': friendList.map((friend) => friend.toJson()).toList(),
       };
 }

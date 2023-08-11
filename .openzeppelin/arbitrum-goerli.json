@@ -1,0 +1,1272 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x76d9b58ae910D46258d66C87077151D3a0800025",
+    "txHash": "0xf1a92c2affcce2120d6d8c20e6162f34fcd4715cf4f71a414f71e9cec32ab3ab"
+  },
+  "proxies": [
+    {
+      "address": "0x14C004501329A2deC893c3e35cbBAdB3D4769100",
+      "txHash": "0xaf06ae735607ad687f577c30b3de8b0fa4bf9f84f76c7271565198ead8e95cae",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa4ED9665A20A9801Ad83859B577bCeEcE6b84013",
+      "txHash": "0xcb4266c94f14a851e5a87f3f77d733f646425159fb769c27eb098edbc6de3382",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x7862afafa6baB5845f74548CE924A3c1FA391224",
+      "txHash": "0x7729e99ae5769dbf90a4770aefc68fb7038a6c03837ef9a8b5a965f290fd1e9c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9Be5D2292788850c24EE39dd2b533907F1E52f18",
+      "txHash": "0x849e635f5ab5716a7aec3bf558dd5a106a5a0c20a25fd648418fc4c060540408",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x2fb5b1d066e7831f81C23A992b5D7115931ed75D",
+      "txHash": "0x6d3aa9f0d7279ab96fa70711ec97a31d517a37d182fd7ac122f32e33e44929cc",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xbd9daec380F5f698918D288bcbF4EBE29ACBBfc1",
+      "txHash": "0x5d40209d25e648390f1d92348386f07875634517d6139b7ad70992700e4e7c34",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0d4013F76a2663341B7cBdDf18CC43134C16A05b",
+      "txHash": "0x9d37217444297bd9e22b0e9e112701c8f428917dd286bd83c973f164b1d4e66a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x317f2a0162e4Ba33bBC7DDCF6Ad67FA4877e3Ed1",
+      "txHash": "0xfdbe99ec9282ce5f27c0ba93a939022bef37a4eeacb01d17a43dd1cb3889db5e",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "a09f9c364a06f3e21a13dffefeafededd823ff6e46a3c9d9de1ba0fe6dce9ebe": {
+      "address": "0x9716bbD0CdBfE55c8b18f797e32B2fe18d3Bd63c",
+      "txHash": "0x2a09c92d407fbbc8e0ad44e42036bde5b03cc29c97c9c4a656e51fef8535bf15",
+      "layout": {
+        "solcVersion": "0.8.18",
+        "storage": [
+          {
+            "label": "profiles",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_array(t_struct(Profile)18_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:42"
+          },
+          {
+            "label": "friendList",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_struct(Friend)44_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:43"
+          },
+          {
+            "label": "isProfilelistAddress",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:45"
+          },
+          {
+            "label": "isFriendlistAddress",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:46"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Friend)44_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Friend[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Profile)18_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Profile[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Friend)44_storage": {
+            "label": "struct ThunderChatProfileContract.Friend",
+            "members": [
+              {
+                "label": "walletAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "friendAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isApproved",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Profile)18_storage": {
+            "label": "struct ThunderChatProfileContract.Profile",
+            "members": [
+              {
+                "label": "walletAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "username",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "photoURL",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "publicKey",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              }
+            ],
+            "numberOfBytes": "192"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        }
+      }
+    },
+    "59d668e3bffcb92a1e07591c013907f4e0de3d834ccbfbff376ac63ec240e54b": {
+      "address": "0x2f8135b3EC35eaF9c6aE1783B7d6d8A237F04E02",
+      "txHash": "0x25e02ee997111fae3fbc377cc73975193dd0a08dc4e12946a105ecbcf6f5ba74",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:13"
+          },
+          {
+            "label": "profiles",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_struct(Profile)3278_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:80"
+          },
+          {
+            "label": "friendList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Friend)3310_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:81"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_struct(Message)3346_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:82"
+          },
+          {
+            "label": "isProfilelistAddress",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:84"
+          },
+          {
+            "label": "isFriendlistAddress",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:85"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Friend)3310_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Friend[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Message)3346_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Profile)3278_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Profile[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Friend)3310_storage": {
+            "label": "struct ThunderChatProfileContract.Friend",
+            "members": [
+              {
+                "label": "walletAddress1",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "walletAddress2",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isApproved",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Message)3346_storage": {
+            "label": "struct ThunderChatProfileContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(Profile)3278_storage": {
+            "label": "struct ThunderChatProfileContract.Profile",
+            "members": [
+              {
+                "label": "walletAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "userId",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "photoURL",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "publicKey",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "referrerCode",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "referredBy",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              }
+            ],
+            "numberOfBytes": "288"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "141baa1e785e80e44af0168e80a18551ee47255b11bda4f41206c2424a734d2b": {
+      "address": "0xcCd90d97e7873861bB6061bdAAab7856f7205451",
+      "txHash": "0xc6a8b9399b78d2a7e3c0f54a23acc61bfe6c8c4a2611ad1f4595de1dff09a6bf",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:10"
+          },
+          {
+            "label": "profiles",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_struct(Profile)3250_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:68"
+          },
+          {
+            "label": "friendList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Friend)3282_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:69"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_struct(Message)3318_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:70"
+          },
+          {
+            "label": "isProfilelistAddress",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:81"
+          },
+          {
+            "label": "isFriendlistAddress",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:82"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Friend)3282_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Friend[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Message)3318_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Profile)3250_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Profile[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Friend)3282_storage": {
+            "label": "struct ThunderChatProfileContract.Friend",
+            "members": [
+              {
+                "label": "walletAddress1",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "walletAddress2",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isApproved",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Message)3318_storage": {
+            "label": "struct ThunderChatProfileContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(Profile)3250_storage": {
+            "label": "struct ThunderChatProfileContract.Profile",
+            "members": [
+              {
+                "label": "walletAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "userId",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "photoURL",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "publicKey",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "referrerCode",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "referredBy",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              }
+            ],
+            "numberOfBytes": "288"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "3bf2fe7dc80502ca4f263e5e08b8957cee3ae5bdc9ce0cf5edaef867a44e53e5": {
+      "address": "0xFcB72ad2B5422764a938054Dcd85AF207e0fA4b6",
+      "txHash": "0x7343d6c46b12b0efec70c3dcb99deb629971c243e4827abccd230055ab21130c",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:10"
+          },
+          {
+            "label": "profiles",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_struct(Profile)3250_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:68"
+          },
+          {
+            "label": "friendList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Friend)3282_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:69"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_array(t_struct(Message)3318_storage)dyn_storage",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:70"
+          },
+          {
+            "label": "isProfilelistAddress",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:81"
+          },
+          {
+            "label": "isFriendlistAddress",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ThunderChatProfileContract",
+            "src": "contracts\\ThunderChatProfileContract.sol:82"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Friend)3282_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Friend[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Message)3318_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_struct(Profile)3250_storage)dyn_storage": {
+            "label": "struct ThunderChatProfileContract.Profile[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Friend)3282_storage": {
+            "label": "struct ThunderChatProfileContract.Friend",
+            "members": [
+              {
+                "label": "walletAddress1",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "walletAddress2",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "isApproved",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Message)3318_storage": {
+            "label": "struct ThunderChatProfileContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_struct(Profile)3250_storage": {
+            "label": "struct ThunderChatProfileContract.Profile",
+            "members": [
+              {
+                "label": "walletAddress",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "userId",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "description",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "photoURL",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "publicKey",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "referrerCode",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "referredBy",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              }
+            ],
+            "numberOfBytes": "288"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "52e921f370c2ce666645b0ea598b1ba679a87091bc428be99e85ca823c285c86": {
+      "address": "0xE742B072c9a77239cBAa7F8Cd427eF3740d8b867",
+      "txHash": "0xd6ec0f91f28a7132cc43e454bd95c915ad08c2f38a0c1cf50a8a43ca69c29963",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:11"
+          },
+          {
+            "label": "thunderChatProfileContract",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(ThunderChatProfileContract)4751",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:22"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Message)2914_storage)dyn_storage",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Message)2914_storage)dyn_storage": {
+            "label": "struct ThunderChatMessageContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ThunderChatProfileContract)4751": {
+            "label": "contract ThunderChatProfileContract",
+            "numberOfBytes": "20"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Message)2914_storage": {
+            "label": "struct ThunderChatMessageContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "daafdbcb79047d5623d38c810114c040176cf6651528f80027b89f616625dca1": {
+      "address": "0x746AA2a5749AF069d84B7182894E359DA2b06Fd5",
+      "txHash": "0xe4ddbfa613a31c0f4bbb680735dce0d9bf98a35e70e4bd1d0452c726585a11d7",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:11"
+          },
+          {
+            "label": "thunderChatProfileContract",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(ThunderChatProfileContract)4762",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:22"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Message)2914_storage)dyn_storage",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Message)2914_storage)dyn_storage": {
+            "label": "struct ThunderChatMessageContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ThunderChatProfileContract)4762": {
+            "label": "contract ThunderChatProfileContract",
+            "numberOfBytes": "20"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Message)2914_storage": {
+            "label": "struct ThunderChatMessageContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "976440820fd0c5bcd674a92526b39f6fed3381338f45da273b267ea6352957ae": {
+      "address": "0xE2C7bF22aeaF3F555D34484982F6FED0cAc5f8ed",
+      "txHash": "0x4e26a2255458569b7878eb10082b98ac75522c41832409738515630398b4f627",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:68"
+          },
+          {
+            "label": "owner",
+            "offset": 2,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:11"
+          },
+          {
+            "label": "thunderChatProfileContract",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(ThunderChatProfileContract)4773",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:22"
+          },
+          {
+            "label": "messageList",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_array(t_struct(Message)2914_storage)dyn_storage",
+            "contract": "ThunderChatMessageContract",
+            "src": "contracts\\ThunderChatMessageContract.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Message)2914_storage)dyn_storage": {
+            "label": "struct ThunderChatMessageContract.Message[]",
+            "numberOfBytes": "32"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(ThunderChatProfileContract)4773": {
+            "label": "contract ThunderChatProfileContract",
+            "numberOfBytes": "20"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Message)2914_storage": {
+            "label": "struct ThunderChatMessageContract.Message",
+            "members": [
+              {
+                "label": "sender",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "receiver",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "senderMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "receiverMessage",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

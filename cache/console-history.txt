@@ -1,0 +1,3 @@
+(await thunderChatProfileContract.getAllProfiles()).toString()
+const thunderChatProfileContract = await ThunderChatProfileContract.attach("0x14C004501329A2deC893c3e35cbBAdB3D4769100")
+const ThunderChatProfileContract = await ethers.get

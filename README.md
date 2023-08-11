@@ -1,5 +1,3 @@
-Thunder is a blockchain project that aims to provide a secure messaging platform for users. With the rise of web3 technologies, users are more aware of the importance of privacy and security. Thunder leverages the ERC-4337 technology so we can onboard the mass adoption of users. Users do not need to go through the hassle of securing seed phrases to interact with the blockchain. Social recovery of accounts is possible and gasless transactions can be achieved via third parties.
+# thunder_chat
 
-The current messaging platforms in the market, such as Telegram and WhatsApp,have been criticised for their lack of privacy and security. These platforms collect user data and use it for targeted advertising or share it with third-party companies. This puts the privacy of users at risk and raises concerns about data breaches and cyberattacks.
-
-Thunder solves this problem by encrypting messages before storing them on the blockchain. The contents stored on the blockchain is immutable and only the intended parties are given access to this encrypted information. Thunder does not collect any user data and does not share it with third-party companies. This provides users with complete control over their data and ensures that their privacy is protected. Mass adoption of this chat application is further cemented by the ease of account creation via ERC-4337 technology.
+A new Flutter project.

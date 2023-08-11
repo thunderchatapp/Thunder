@@ -1,6 +1,6 @@
 {
-    "name": "notetaking_dapp",
-    "short_name": "notetaking_dapp",
+    "name": "thunder_chat",
+    "short_name": "thunder_chat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

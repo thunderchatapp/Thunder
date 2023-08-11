@@ -1,9 +1,14 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:ethers/signers/wallet.dart' as w;
-import 'package:flutter_app/screens/homePage.dart';
-import 'package:flutter_app/screens/splashPage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thunder_chat/controllers/message_controller.dart';
+import 'package:thunder_chat/models/chatProfileModel.dart';
+import 'package:thunder_chat/screens/homePage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:web3auth_flutter/enums.dart';
@@ -12,32 +17,32 @@ import 'package:web3auth_flutter/output.dart';
 import 'dart:async';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:web3auth_flutter/web3auth_flutter.dart';
-import 'package:flutter_app/controllers/chatMessage_controller.dart';
-import 'package:flutter_app/controllers/chatProfile_controller.dart';
-import 'package:decimal/decimal.dart';
-import 'package:flutter_app/models/chatProfileModel.dart';
-import 'package:flutter_app/appconfig.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-// ignore: depend_on_referenced_packages
-import 'package:http/http.dart';
+import 'package:thunder_chat/appconfig.dart';
+import 'package:http/http.dart' as http;
 import 'package:web3dart/web3dart.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:thunder_chat/helpers/web3Helper.dart';
+import 'package:thunder_chat/controllers/profile_controller.dart';
 
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:shared_preferences/shared_preferences.dart';
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
-class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  String _result = '';
-  bool logoutVisible = false;
+class _SignUpScreenState extends State<SignUpPage> {
   final config = AppConfig();
-  bool _isLoading = false; //bool variable created.
-  String loadingText = "Loading"; //bool variable created
+  late TextEditingController emailCtrl;
+  late ChatMessageController chatMessageController;
+  var email;
+  Future<ChatProfile>? _futureChatProfile;
 
+  String _futurePrivateKey = "";
+
+  late ChatProfileController chatProfileController;
   @override
   void dispose() {
     super.dispose();
@@ -46,7 +51,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+    emailCtrl = TextEditingController(text: "");
     initPlatformState();
+  }
+
+  handleEmailLogin() async {
+    email = emailCtrl.text;
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -57,9 +67,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Uri redirectUrl;
 
     if (Platform.isAndroid) {
-      redirectUrl = Uri.parse('w3a://com.example.thunder/auth');
+      redirectUrl = Uri.parse('w3a://com.example.thunder_chat/auth');
     } else if (Platform.isIOS) {
-      redirectUrl = Uri.parse('com.example.thunder://openlogin');
+      redirectUrl = Uri.parse('com.example.thunder_chat://openlogin');
     } else {
       throw UnKnownException('Unknown platform');
     }
@@ -69,159 +79,231 @@ class _SignUpScreenState extends State<SignUpScreen> {
         network: Network.testnet,
         redirectUrl: redirectUrl,
         whiteLabel: WhiteLabelData(
-            dark: false, name: "Thunder Chat App", theme: themeMap)));
+            dark: false, name: "Thunder Chat", theme: themeMap)));
   }
 
   @override
   Widget build(BuildContext context) {
+    chatProfileController = p.Provider.of<ChatProfileController>(context);
+    chatMessageController = p.Provider.of<ChatMessageController>(context);
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Row(),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Image.asset(
-                        'assets\\thunder_logo.png',
-                        height: 250,
-                      ),
-                    ),
-                    SizedBox(height: 1),
-                    Text(
-                      'Let\'s get started',
-                      style: TextStyle(
-                        fontSize: 30,
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Text(
-                      'CONTINUE WITH',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // Handle Google login button click
-                              print("In google.");
-                              Fluttertoast.showToast(
-                                  msg: "Login with google",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black12,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                              _login(_withGoogle);
-                            },
-                            child: SvgPicture.asset(
-                              "assets/login-google.svg",
-                              height: 50,
-                            ),
-                          ),
-                          SizedBox(width: 20.0),
-                          GestureDetector(
-                            onTap: () {
-                              // Handle Facebook login button click
-                              Fluttertoast.showToast(
-                                  msg: "Login with facebook",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black12,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                              _login(_withFacebook);
-                            },
-                            child: SvgPicture.asset(
-                              "assets/login-facebook.svg",
-                              height: 50,
-                            ),
-                          ),
-                          SizedBox(width: 20.0),
-                          GestureDetector(
-                            onTap: () {
-                              // Handle Google login button click
-                              print("In google.");
-                              Fluttertoast.showToast(
-                                  msg: "Login with Twitter",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.black12,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
-                              _login(_withGoogle);
-                            },
-                            child: SvgPicture.asset(
-                              "assets/login-twitter.svg",
-                              height: 50,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Text(
-                      '\n------------- or -------------\n',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 60, vertical: 16),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: 'Email',
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: flatButtonStyle,
-                      onPressed: () {},
-                      child: Text(
-                        'Log in with Email',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
+      body: Center(
+        child: SingleChildScrollView(
+          child:
+              (_futurePrivateKey == "") ? buildColumn() : buildFutureBuilder(),
         ),
       ),
     );
   }
 
+  FutureBuilder<ChatProfile> buildFutureBuilder() {
+    return FutureBuilder<ChatProfile>(
+      future: _futureChatProfile,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: <Widget>[
+              SizedBox(
+                child: DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    //fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      AnimatedTextKit(
+                        isRepeatingAnimation: false,
+                        repeatForever: false,
+                        totalRepeatCount: 1,
+                        onFinished: () => Navigator.of(context).push(
+                            PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, anotherAnimation) {
+                                  return HomePage();
+                                },
+                                transitionDuration:
+                                    Duration(milliseconds: 1000),
+                                transitionsBuilder: (context, animation,
+                                    anotherAnimation, child) {
+                                  animation = CurvedAnimation(
+                                      curve: Curves.easeIn, parent: animation);
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                })),
+                        animatedTexts: [
+                          FadeAnimatedText(
+                            'Welcome',
+                            duration: Duration(seconds: 3),
+                            fadeOutBegin: 0.9,
+                            fadeInEnd: 0.7,
+                          ),
+                          FadeAnimatedText('${snapshot.data!.name}',
+                              duration: Duration(seconds: 3),
+                              fadeOutBegin: 0.9,
+                              fadeInEnd: 0.7),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+        return SizedBox(
+          child: DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 18.0,
+              //fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+            child: Center(
+              child: AnimatedTextKit(
+                repeatForever: true,
+                animatedTexts: [
+                  FadeAnimatedText('Please wait.',
+                      duration: Duration(seconds: 2),
+                      fadeOutBegin: 0.9,
+                      fadeInEnd: 0.7),
+                  FadeAnimatedText('While we are getting your account.',
+                      duration: Duration(seconds: 2),
+                      fadeOutBegin: 0.9,
+                      fadeInEnd: 0.7),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Column buildColumn() {
+    return Column(
+      children: [
+        Image.asset(
+          'assets\\thunder_logo.png',
+          height: 100,
+        ),
+        const SizedBox(height: 50),
+        const Text(
+          'Let\'s get started',
+          style: TextStyle(
+            fontSize: 28,
+          ),
+        ),
+        const SizedBox(height: 30),
+        const Text(
+          'CONTINUE WITH',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+          ),
+        ),
+        const SizedBox(height: 30),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // Handle Google login button click
+                  if (kDebugMode) {
+                    print("In google.");
+                  }
+                  Fluttertoast.showToast(
+                      msg: "Login with google",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black12,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  _login(_withGoogle);
+                },
+                child: SvgPicture.asset(
+                  "assets/login-google.svg",
+                  height: 50,
+                ),
+              ),
+              const SizedBox(width: 20.0),
+              GestureDetector(
+                onTap: () {
+                  // Handle Facebook login button click
+                  Fluttertoast.showToast(
+                      msg: "Login with facebook",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.black12,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                  _login(_withFacebook);
+                },
+                child: SvgPicture.asset(
+                  "assets/login-facebook.svg",
+                  height: 50,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const Text(
+          '\n------------- or -------------\n',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.grey,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 16),
+          child: TextField(
+            controller: emailCtrl,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Email',
+            ),
+          ),
+        ),
+        TextButton(
+          style: flatButtonStyle,
+          onPressed: () {
+            if (kDebugMode) {
+              print("In passwordless email.");
+            }
+            Fluttertoast.showToast(
+                msg: "Login with email",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.black12,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            _login(_withEmailPasswordless);
+          },
+          child: const Text(
+            'Log in with Email',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     foregroundColor: Colors.black87,
-    minimumSize: Size(88, 36),
-    padding: EdgeInsets.symmetric(horizontal: 16.0),
+    minimumSize: const Size(88, 36),
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(2.0)),
     ),
@@ -230,42 +312,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<void> _login(Future<Web3AuthResponse> Function() method) async {
     try {
       final Web3AuthResponse response = await method();
+      debugPrint(response.toJson().toString());
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('privateKey', response.privKey.toString());
-      await _setUp("");
+      String privateKey = response.privKey.toString();
 
+      await prefs.setString('thunderPrivateKey', privateKey);
+
+      String? email = response.userInfo!.email;
       setState(() {
-        _result = response.toString();
-        logoutVisible = true;
-
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) {
-          return SplashPage();
-        }));
+        _futurePrivateKey = privateKey;
       });
-    } on UserCancelledException {
-      print("User cancelled.");
-    } on UnKnownException {
-      print("Unknown exception occurred");
-    }
-  }
 
-  /* VoidCallback _login(Future<Web3AuthResponse> Function() method) {
-    return () async {
-      try {
-        final Web3AuthResponse response = await method();
-        setState(() {
-          _result = response.toString();
-          logoutVisible = true;
-        });
-      } on UserCancelledException {
+      await _setUp(privateKey, email, getEmailUserId(email!),
+          "I am using Thunder!", response.userInfo!.profileImage);
+      await prefs.setString('thunderPrivateKey', privateKey);
+    } on UserCancelledException {
+      if (kDebugMode) {
         print("User cancelled.");
-      } on UnKnownException {
+      }
+    } on UnKnownException {
+      if (kDebugMode) {
         print("Unknown exception occurred");
       }
-    };
-  } */
+    }
+  }
 
   Future<Web3AuthResponse> _withGoogle() {
     return Web3AuthFlutter.login(LoginParams(
@@ -281,28 +352,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<Web3AuthResponse> _withEmailPasswordless() {
     return Web3AuthFlutter.login(LoginParams(
         loginProvider: Provider.email_passwordless,
-        extraLoginOptions:
-            ExtraLoginOptions(login_hint: "hello+flutterdemo@tor.us")));
+        extraLoginOptions: ExtraLoginOptions(login_hint: emailCtrl.text)));
   }
 
-  Future<Web3AuthResponse> _withDiscord() {
-    return Web3AuthFlutter.login(LoginParams(loginProvider: Provider.discord));
-  }
-
-  Future<EtherAmount> _setUp(String privateKey) async {
-    //String privateKey;
-    if (privateKey == "") {
-      final prefs = await SharedPreferences.getInstance();
-      privateKey = prefs.getString('privateKey') ?? '0';
-    }
-
-    final client = Web3Client(config.rpcUrl, Client());
+  _setUp(String privateKey, String? userId, String name, String description,
+      String? photoURL) async {
+    final client = Web3Client(config.rpcUrl, http.Client());
     final credentials = EthPrivateKey.fromHex(privateKey);
     final address = credentials.address;
     //final publicKey = credentials.publicKey;
-    final balance = await client.getBalance(address);
+    //final balance = await client.getBalance(address);
     final walletPrivateKey = w.Wallet.fromPrivateKey(privateKey);
+    final directory = await getApplicationDocumentsDirectory();
+    final fileProfile = File('${directory.path}/myProfile.json');
+    final fileChat = File('${directory.path}/chatMessage.json');
+    final fileLastRead = File('${directory.path}/lastRead.json');
+
     String publicKey;
+    String referredBy = "";
+
     final _publicKey = walletPrivateKey.signingKey?.publicKey;
     if (_publicKey != null) {
       publicKey = _publicKey.substring(2);
@@ -313,43 +381,84 @@ class _SignUpScreenState extends State<SignUpScreen> {
     debugPrint("Wallet Address: $address");
     debugPrint("Wallet Public Key: $publicKey");
     debugPrint("Wallet Private Key: $privateKey");
-    debugPrint("Wallet Balance: $balance");
-    final storage = new FlutterSecureStorage();
-    await storage.write(key: "thunder", value: privateKey);
-    BigInt weiValue = balance.getInWei; // 1 ether = 10^18 Wei
-    double ethValue = weiValue.toDouble() / BigInt.from(pow(10, 18)).toDouble();
+    //debugPrint("Wallet Balance: $balance");
+    debugPrint("email: $userId");
+    debugPrint("description: $description");
+    debugPrint("photoURL: $photoURL");
 
-    debugPrint(ethValue.toString()); // output: 1.0
+    bool userIdExists = await chatProfileController.checkUserIdExits(userId!);
 
-    if (ethValue < 0.1) {
-      double topUpValue = 0.05;
-      _sendTopupAmount(topUpValue, address);
+    if (!(await fileProfile.exists())) {
+      // Create the file if it doesn't exist
+      await fileProfile.create();
     }
 
-    return balance;
+    if (!(await fileChat.exists())) {
+      // Create the file if it doesn't exist
+      await fileChat.create();
+    }
+
+    if (!(await fileLastRead.exists())) {
+      // Create the file if it doesn't exist
+      await fileLastRead.create();
+    }
+
+    if (userIdExists) {
+      await chatMessageController.getAllChatMessages(address);
+      _futureChatProfile = chatProfileController.getProfileWithFriendList(
+          address, chatMessageController);
+
+      setState(() {
+        _futurePrivateKey = privateKey;
+
+        final myProfileJson =
+            jsonEncode(chatProfileController.myProfile.toJson());
+        final chatMessagesJson =
+            jsonEncode(chatMessageController.messagesToJson());
+        final lastReadJson = jsonEncode(chatProfileController.lastReadToJson());
+
+        fileProfile.writeAsString(myProfileJson);
+        fileChat.writeAsString(chatMessagesJson);
+        fileLastRead.writeAsString(lastReadJson);
+      });
+    } else {
+      debugPrint("Profile not found!");
+      await chatProfileController.createProfile(userId!, name, description,
+          photoURL!, publicKey, address.toString(), referredBy, privateKey);
+
+      //userIdExists = false;
+      // while (!userIdExists) {
+      //   await Future.delayed(
+      //       const Duration(milliseconds: 1000)); // Add a delay before retrying
+      //   userNameExists = await chatProfileController.checkUserNameExits(userId);
+      // }
+      chatMessageController.getAllChatMessages(address);
+      _futureChatProfile = chatProfileController.getProfileWithFriendList(
+          address, chatMessageController);
+
+      setState(() {
+        _futurePrivateKey = privateKey;
+
+        final myProfileJson =
+            jsonEncode(chatProfileController.myProfile.toJson());
+        final chatMessagesJson =
+            jsonEncode(chatMessageController.messagesToJson());
+        final lastReadJson = jsonEncode(chatProfileController.lastReadToJson());
+
+        fileProfile.writeAsString(myProfileJson);
+        fileChat.writeAsString(chatMessagesJson);
+        fileLastRead.writeAsString(lastReadJson);
+      });
+    }
+
+    chatMessageController.startListener(chatProfileController);
   }
 
-  _sendTopupAmount(double topUpValue, EthereumAddress toAddress) async {
-    String privateKey = config.thunderContractAddressPK;
+  String getEmailUserId(String email) {
+    // Split the email address by the '@' symbol
+    List<String> emailParts = email.split('@');
 
-    final client = Web3Client(config.rpcUrl, Client());
-    final credentials = EthPrivateKey.fromHex(privateKey);
-    final fromAddress = credentials.address;
-    try {
-      final receipt = await client.sendTransaction(
-          credentials,
-          Transaction(
-            from: fromAddress,
-            to: toAddress,
-            // gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 100),
-            value: EtherAmount.fromBigInt(EtherUnit.wei,
-                BigInt.from((topUpValue * pow(10, 18)).floor())), // 0.005 ETH
-          ),
-          chainId: 421613);
-
-      debugPrint(receipt);
-    } catch (e) {
-      _result = e.toString();
-    }
+    // Return the first part (user ID) of the split email address
+    return emailParts[0];
   }
 }
