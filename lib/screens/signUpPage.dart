@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:ethers/signers/wallet.dart' as w;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart' as p;
@@ -404,6 +405,9 @@ class _SignUpScreenState extends State<SignUpPage> {
     }
 
     if (userIdExists) {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      debugPrint("fcmToken: $fcmToken");
+
       await chatMessageController.getAllChatMessages(address);
       _futureChatProfile = chatProfileController.getProfileWithFriendList(
           address, chatMessageController);
@@ -423,8 +427,20 @@ class _SignUpScreenState extends State<SignUpPage> {
       });
     } else {
       debugPrint("Profile not found!");
-      await chatProfileController.createProfile(userId!, name, description,
-          photoURL!, publicKey, address.toString(), referredBy, privateKey);
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      debugPrint("fcmToken: $fcmToken");
+
+      await chatProfileController.createProfile(
+          userId!,
+          name,
+          description,
+          photoURL!,
+          publicKey,
+          address.toString(),
+          referredBy,
+          privateKey,
+          fcmToken!);
 
       //userIdExists = false;
       // while (!userIdExists) {

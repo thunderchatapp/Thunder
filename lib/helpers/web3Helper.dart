@@ -133,7 +133,8 @@ class Web3Helper extends ChangeNotifier {
       String description,
       String photoURL,
       String referredBy,
-      String publicKey) {
+      String publicKey,
+      String fcmToken) {
     final encodedCreateProfileFunction =
         thunderChatProfileContract.abi.functions.firstWhere(
       (function) => function.name == 'addProfile',
@@ -141,7 +142,7 @@ class Web3Helper extends ChangeNotifier {
     );
     debugPrint("0x");
     final encodeFunction = encodedCreateProfileFunction.encodeCall(
-        [userId, name, description, photoURL, referredBy, publicKey]);
+        [userId, name, description, photoURL, referredBy, publicKey, fcmToken]);
     debugPrint("0x${hex.encode(encodeFunction)}");
     return "0x${hex.encode(encodeFunction)}";
   }

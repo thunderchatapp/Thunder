@@ -372,7 +372,8 @@ class ChatProfileController extends ChangeNotifier {
       String publicKey,
       String myAddress,
       String referredBy,
-      String myPrivateKey) async {
+      String myPrivateKey,
+      String fcmToken) async {
     String currentNonce = "0";
     String encodedCreateProfile;
     String requestEnveope = "";
@@ -381,7 +382,7 @@ class ChatProfileController extends ChangeNotifier {
     debugPrint("currentNonce: $currentNonce");
 
     encodedCreateProfile = web3Helper.getEncodedCreateProfileData(
-        userId, name, description, photoURL, referredBy, publicKey);
+        userId, name, description, photoURL, referredBy, publicKey, fcmToken);
 
     String json = web3Helper.getDataToSign(currentNonce, myAddress,
         encodedCreateProfile, config.chatProfileProxyAddress);

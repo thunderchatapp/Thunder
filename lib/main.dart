@@ -37,14 +37,15 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('A bg message just showed up: ${message.messageId}');
-  int pendingMessagesCount =
-      5; // Replace this with the actual pending messages count
-  FlutterDynamicIcon.setApplicationIconBadgeNumber(5);
+  // int pendingMessagesCount =
+  //     5; // Replace this with the actual pending messages count
+  // FlutterDynamicIcon.setApplicationIconBadgeNumber(5);
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await flutterLocalNotificationsPlugin
@@ -57,10 +58,6 @@ Future<void> main() async {
     badge: true,
     sound: true,
   );
-
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  debugPrint("fcmToken: $fcmToken");
-
   runApp(const MainApp());
 }
 
@@ -138,7 +135,7 @@ class _CheckLoginState extends State<CheckLogin> {
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
-            decrypt(privateKey, notification.body),
+            notification.body,
             NotificationDetails(
               android: AndroidNotificationDetails(
                 channel.id,
@@ -256,9 +253,6 @@ class _CheckLoginState extends State<CheckLogin> {
 
           await fileProfile.writeAsString(myProfileJson);
           await fileChat.writeAsString(chatMessagesJson);
-
-          debugPrint(
-              "Hi how are you? encode: ${encrypt(chatProfileController.myProfile.publicKey, "Hi how are you?")}");
         } else {
           await chatMessageController.getAllChatMessages(address);
 

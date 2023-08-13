@@ -18,6 +18,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
         string publicKey;
         string referrerCode; // New field for the referrer code
         string referredBy;   // New field for the referred by code
+        string fcmToken;
         uint timestamp;
     }
 
@@ -29,7 +30,8 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
         string photoURL;
         string publicKey;
         string referrerCode; // New field for the referrer code
-            string referredBy;   // New field for the referred by code
+        string referredBy;   // New field for the referred by code
+        string fcmToken;
         uint timestamp;
         FriendProfile[] friends;
         
@@ -50,7 +52,8 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
         string photoURL;
         string publicKey;
         string referrerCode; // New field for the referrer code
-            string referredBy;   // New field for the referred by code
+        string referredBy;   // New field for the referred by code
+        string fcmToken;
         uint timestamp;
         bool isApproved;
         bool isRequester;
@@ -115,11 +118,11 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
     }
 
 
-    function addProfile(string calldata _userId, string calldata _name, string calldata _description, string calldata _photoURL, string calldata referredBy, string calldata _publicKey) public {
+    function addProfile(string calldata _userId, string calldata _name, string calldata _description, string calldata _photoURL, string calldata referredBy, string calldata _publicKey, string calldata fcmToken) public {
         require(!isProfilelistAddress[_msgSender()], "Profile already exists.");
 
         string memory referrerCode = generateReferrerCode();
-        profiles.push(Profile(_msgSender(), _userId, _name, _description, _photoURL, _publicKey, referrerCode, referredBy, block.timestamp));
+        profiles.push(Profile(_msgSender(), _userId, _name, _description, _photoURL, _publicKey, referrerCode, referredBy, fcmToken, block.timestamp));
         isProfilelistAddress[_msgSender()] = true;
         emit AddProfile(_msgSender(), _userId, _name, _description, _photoURL, _publicKey, block.timestamp);
     }
@@ -141,7 +144,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
         // Count the number of messages sent by the sender
         for (uint i = 0; i < profiles.length; i++) {
             if (profiles[i].walletAddress == _walletAddress) {
-                info = Profile(profiles[i].walletAddress, profiles[i].userId, profiles[i].name, profiles[i].description, profiles[i].photoURL, profiles[i].publicKey, profiles[i].referrerCode, profiles[i].referredBy, profiles[i].timestamp);
+                info = Profile(profiles[i].walletAddress, profiles[i].userId, profiles[i].name, profiles[i].description, profiles[i].photoURL, profiles[i].publicKey, profiles[i].referrerCode, profiles[i].referredBy, profiles[i].fcmToken, profiles[i].timestamp);
                 break;
             }
         }
@@ -182,6 +185,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
                 friendsProfileList[y].publicKey = tempProfile.publicKey;
                 friendsProfileList[y].referrerCode = tempProfile.referrerCode;
                 friendsProfileList[y].referredBy = tempProfile.referredBy;
+                friendsProfileList[y].fcmToken = tempProfile.fcmToken;
                 friendsProfileList[y].timestamp = tempProfile.timestamp;
                 friendsProfileList[y].isApproved = friendList[x].isApproved;
                 friendsProfileList[y].timestampadded = friendList[x].timestamp;
@@ -192,7 +196,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
         // Count the number of messages sent by the sender
         for (uint i = 0; i < profiles.length; i++) {
             if (profiles[i].walletAddress == _walletAddress) {
-                info = ProfileWithFriendList(profiles[i].walletAddress, profiles[i].userId, profiles[i].name , profiles[i].description, profiles[i].photoURL, profiles[i].publicKey, profiles[i].referrerCode, profiles[i].referredBy, profiles[i].timestamp, friendsProfileList);
+                info = ProfileWithFriendList(profiles[i].walletAddress, profiles[i].userId, profiles[i].name , profiles[i].description, profiles[i].photoURL, profiles[i].publicKey, profiles[i].referrerCode, profiles[i].referredBy, profiles[i].fcmToken,  profiles[i].timestamp, friendsProfileList);
                 break;
             }
         }
@@ -200,7 +204,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
     }
   
 
-  function updateProfile(string calldata _name, string calldata _description, string calldata _photoURL) public {
+  function updateProfile(string calldata _name, string calldata _description, string calldata _photoURL, string calldata _fcmToken) public {
     require(isProfilelistAddress[_msgSender()], "Profile does not exist.");
     
     for (uint i = 0; i < profiles.length; i++) {
@@ -209,6 +213,7 @@ contract ThunderChatProfileContract is Initializable, ERC2771Context {
             profiles[i].name = _name;
             profiles[i].description = _description;
             profiles[i].photoURL = _photoURL;
+            profiles[i].fcmToken = _fcmToken;
             profiles[i].timestamp = block.timestamp;
             break;
         }
