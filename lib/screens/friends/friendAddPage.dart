@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:thunder_chat/controllers/profile_controller.dart';
+import 'package:thunder_chat/helpers/notificationHelper.dart';
 import 'package:thunder_chat/helpers/web3Helper.dart';
 import 'package:thunder_chat/models/chatProfileModel.dart';
 import 'package:web3dart/web3dart.dart';
@@ -39,7 +41,8 @@ class _FriendAddPageState extends State<FriendAddPage> {
     });
   }
 
-  void sendFriendRequest(EthereumAddress walletAddress, int index) async {
+  void sendFriendRequest(
+      EthereumAddress walletAddress, String fcmToken, int index) async {
     setState(() {
       friendList[index].isRequestSending = true;
     });
@@ -61,6 +64,18 @@ class _FriendAddPageState extends State<FriendAddPage> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+
+      // Send a notification to the specified FCM token
+      FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      await firebaseMessaging.requestPermission();
+      await firebaseMessaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      NotificationHelper notificationHelper = NotificationHelper();
+      notificationHelper.sendNotification(fcmToken, "Friend Request",
+          "${chatProfileController.myProfile.name} wants to add you as friend");
     } catch (e) {
       setState(() {
         friendList[index].isRequestSending = false;
@@ -197,8 +212,8 @@ class _FriendAddPageState extends State<FriendAddPage> {
                         if (friendList.length > 0) {
                           return GestureDetector(
                             onTap: () {
-                              sendFriendRequest(
-                                  friendList[index].walletAddress, index);
+                              sendFriendRequest(friendList[index].walletAddress,
+                                  friendList[index].fcmToken, index);
                             },
                             child: ListTile(
                               leading: CircleAvatar(

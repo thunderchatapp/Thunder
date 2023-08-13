@@ -35,11 +35,25 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
   print('A bg message just showed up: ${message.messageId}');
+
+  // final prefs = await SharedPreferences.getInstance();
+  // final String? privateKey = prefs.getString('thunderPrivateKey');
+  // print('privateKey: $privateKey');
+  // print('message: ' + message.notification!.body.toString());
+  // String encryptedContent = message.notification!.body.toString();
+  // String decryptedContent = decrypt(privateKey, encryptedContent);
+  // print('Decrypted content: $decryptedContent');
+
+  // message.data['content'] = decryptedContent;
+
   // int pendingMessagesCount =
   //     5; // Replace this with the actual pending messages count
   // FlutterDynamicIcon.setApplicationIconBadgeNumber(5);
+
+  // i want to decrypt the content of the incoming message decrypt(privateKey, content)
+
+  await Firebase.initializeApp();
 }
 
 Future<void> main() async {
@@ -125,76 +139,36 @@ class _CheckLoginState extends State<CheckLogin> {
   void initState() {
     super.initState();
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      final prefs = await SharedPreferences.getInstance();
-      final String? privateKey = prefs.getString('thunderPrivateKey');
-
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                color: Colors.blue,
-                playSound: true,
-                icon: '@mipmap/ic_launcher',
-              ),
-            ));
-      }
-    });
-
     @override
     void dispose() {
       super.dispose();
     }
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      final prefs = await SharedPreferences.getInstance();
-      final String? privateKey = prefs.getString('thunderPrivateKey');
+      // final prefs = await SharedPreferences.getInstance();
+      // final String? privateKey = prefs.getString('thunderPrivateKey');
 
-      print('A new onMessageOpenedApp event was published!');
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Text(notification.title!),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(decrypt(privateKey, notification.body!))],
-                  ),
-                ),
-              );
-            });
-      }
+      // print('A new onMessageOpenedApp event was published!');
+      // RemoteNotification? notification = message.notification;
+      // AndroidNotification? android = message.notification?.android;
+      // if (notification != null && android != null) {
+      //   showDialog(
+      //       context: context,
+      //       builder: (_) {
+      //         return AlertDialog(
+      //           title: Text(notification.title!),
+      //           content: SingleChildScrollView(
+      //             child: Column(
+      //               crossAxisAlignment: CrossAxisAlignment.start,
+      //               children: [Text(decrypt(privateKey, notification.body!))],
+      //             ),
+      //           ),
+      //         );
+      //       });
+      // }
+      checkLogin();
     });
     checkLogin();
-  }
-
-  void showNotification() {
-    setState(() {
-      //_counter++;
-    });
-    flutterLocalNotificationsPlugin.show(
-        0,
-        "Testing ",
-        "How you doin ?",
-        NotificationDetails(
-            android: AndroidNotificationDetails(channel.id, channel.name,
-                channelDescription: channel.description,
-                importance: Importance.high,
-                color: Colors.blue,
-                playSound: true,
-                icon: '@mipmap/ic_launcher')));
   }
 
   Future<void> checkLogin() async {
@@ -238,6 +212,12 @@ class _CheckLoginState extends State<CheckLogin> {
             chatMessageController,
           );
 
+          debugPrint("Profile: ");
+          debugPrint(chatProfileController.myProfile.toJson().toString());
+          debugPrint("Encrypted test message: ");
+          debugPrint(encrypt(
+              chatProfileController.myProfile.publicKey, "Hi how are you."));
+
           setState(() {
             loading = false;
             loggedIn = true;
@@ -251,6 +231,7 @@ class _CheckLoginState extends State<CheckLogin> {
           final chatMessagesJson =
               jsonEncode(chatMessageController.messagesToJson());
 
+          debugPrint("1");
           await fileProfile.writeAsString(myProfileJson);
           await fileChat.writeAsString(chatMessagesJson);
         } else {

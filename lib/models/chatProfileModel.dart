@@ -11,7 +11,7 @@ class ChatProfile {
   String referrerCode;
   String referredBy;
   String publicKey;
-
+  String fcmToken;
   DateTime created;
 
   bool isRequestSending;
@@ -26,6 +26,7 @@ class ChatProfile {
       required this.referrerCode,
       required this.referredBy,
       required this.publicKey,
+      required this.fcmToken,
       required this.created,
       this.isRequestSending = false});
 
@@ -38,6 +39,7 @@ class ChatProfile {
         referrerCode = json['referrerCode'],
         referredBy = json['referredBy'],
         publicKey = json['publicKey'],
+        fcmToken = json['fcmToken'],
         created = DateTime.parse(json['created']),
         isRequestSending = json['isRequestSending'],
         friendList = List<FriendProfile>.from((json['friendList'] ?? [])
@@ -52,6 +54,7 @@ class ChatProfile {
         "referrerCode": referrerCode,
         "referredBy": referredBy,
         "publicKey": publicKey,
+        "fcmToken": fcmToken,
         'created': created.toIso8601String(), // Convert DateTime to string
         "isRequestSending": isRequestSending,
         'friendList': friendList.map((friend) => friend.toJson()).toList(),

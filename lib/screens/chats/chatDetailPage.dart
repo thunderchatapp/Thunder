@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:thunder_chat/controllers/profile_controller.dart';
+import 'package:thunder_chat/helpers/notificationHelper.dart';
 import 'package:thunder_chat/models/chatProfileModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -86,6 +88,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         chatProfileController.myProfile.publicKey,
         friendProfile.publicKey,
         chatProfileController);
+    NotificationHelper notificationHelper = NotificationHelper();
+    notificationHelper.sendNotification(friendProfile.fcmToken, "New message",
+        "${chatProfileController.myProfile.name} has sent you an encrypted message.");
   }
 
   @override
@@ -278,19 +283,20 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                                 4, // Adjust the horizontal position
                                             child: Container(
                                               padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                color: Colors
-                                                    .orangeAccent, // Customize the color of the icon background
-                                                shape: BoxShape.circle,
-                                              ),
+                                              // decoration: BoxDecoration(
+                                              //   color: Colors
+                                              //       .orangeAccent, // Customize the color of the icon background
+                                              //   shape: BoxShape.circle,
+                                              // ),
                                               child: Icon(
-                                                Icons.timer_outlined,
+                                                Icons.local_activity,
                                                 size: 16,
                                                 color: Colors
-                                                    .white, // Customize the color of the icon
+                                                    .black26, // Customize the color of the icon
                                               ),
                                             ),
                                           ),
+
                                         // Message sent time at the bottom right
                                         Positioned(
                                           bottom:
@@ -300,7 +306,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: 6,
-                                                vertical: 4), // Add padding
+                                                vertical: 6), // Add padding
                                             child: Text(
                                               DateFormat('HH:mm')
                                                   .format(chatMessage.created),

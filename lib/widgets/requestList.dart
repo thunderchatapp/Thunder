@@ -6,6 +6,8 @@ import 'package:thunder_chat/models/chatProfileModel.dart';
 import 'package:thunder_chat/models/friendProfile.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../helpers/notificationHelper.dart';
+
 class RequestList extends StatefulWidget {
   final FriendProfile receiverProfile;
 
@@ -30,6 +32,11 @@ class _RequestListState extends State<RequestList> {
       try {
         await chatProfileController
             .deleteFriend(widget.receiverProfile.walletAddress);
+        NotificationHelper notificationHelper = NotificationHelper();
+        notificationHelper.sendNotification(
+            widget.receiverProfile.fcmToken,
+            "Friend Request",
+            "${chatProfileController.myProfile.name} rejected your friend request.");
       } catch (e) {
         debugPrint(e.toString());
         Fluttertoast.showToast(
@@ -58,6 +65,12 @@ class _RequestListState extends State<RequestList> {
       try {
         await chatProfileController
             .approveFriend(widget.receiverProfile.walletAddress);
+
+        NotificationHelper notificationHelper = NotificationHelper();
+        notificationHelper.sendNotification(
+            widget.receiverProfile.fcmToken,
+            "Friend Request",
+            "${chatProfileController.myProfile.name} accepted your friend request.");
       } catch (e) {
         Fluttertoast.showToast(
           msg: "Error. Please try again.",

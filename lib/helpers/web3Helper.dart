@@ -127,22 +127,16 @@ class Web3Helper extends ChangeNotifier {
     return nouce;
   }
 
-  String getEncodedCreateProfileData(
-      String userId,
-      String name,
-      String description,
-      String photoURL,
-      String referredBy,
-      String publicKey,
-      String fcmToken) {
+  String getEncodedCreateProfileData(String userId, String name,
+      String photoURL, String referredBy, String publicKey, String fcmToken) {
     final encodedCreateProfileFunction =
         thunderChatProfileContract.abi.functions.firstWhere(
       (function) => function.name == 'addProfile',
       orElse: () => throw Exception('Function "addProfile" not found in ABI'),
     );
     debugPrint("0x");
-    final encodeFunction = encodedCreateProfileFunction.encodeCall(
-        [userId, name, description, photoURL, referredBy, publicKey, fcmToken]);
+    final encodeFunction = encodedCreateProfileFunction
+        .encodeCall([userId, name, photoURL, referredBy, publicKey, fcmToken]);
     debugPrint("0x${hex.encode(encodeFunction)}");
     return "0x${hex.encode(encodeFunction)}";
   }
@@ -155,10 +149,14 @@ class Web3Helper extends ChangeNotifier {
   // }
 
   String getEncodedAddFriendData(EthereumAddress friendAddress) {
-    final encodeFunction =
-        thunderChatProfileContract.abi.functions[2].encodeCall([friendAddress]);
+    final addToFriend = thunderChatProfileContract.abi.functions.firstWhere(
+      (function) => function.name == 'addToFriendRequestlist',
+      orElse: () =>
+          throw Exception('Function "addToFriendRequestlist" not found in ABI'),
+    );
 
-    debugPrint(thunderChatProfileContract.abi.functions[2].encodeName());
+    final encodeFunction = addToFriend.encodeCall([friendAddress]);
+
     return "0x${hex.encode(encodeFunction)}";
   }
 

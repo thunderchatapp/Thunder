@@ -10,6 +10,7 @@ class FriendProfile {
   String publicKey;
   String referrerCode;
   String referredBy;
+  String fcmToken;
   DateTime created;
   bool isApproved;
   String lastMessage;
@@ -26,6 +27,7 @@ class FriendProfile {
       required this.publicKey,
       required this.referrerCode,
       required this.referredBy,
+      required this.fcmToken,
       required this.created,
       required this.isApproved,
       required this.added,
@@ -42,6 +44,7 @@ class FriendProfile {
         publicKey = json['publicKey'],
         referrerCode = json['referrerCode'],
         referredBy = json['referredBy'],
+        fcmToken = json['fcmToken'],
         created = DateTime.parse(json['created']),
         isApproved = json['isApproved'],
         added = DateTime.parse(json['added']),
@@ -58,6 +61,7 @@ class FriendProfile {
         "publicKey": publicKey,
         "referrerCode": referrerCode,
         "referredBy": referredBy,
+        "fcmToken": fcmToken,
         "created": created.toIso8601String(),
         "isApproved": isApproved,
         "added": added.toIso8601String(),

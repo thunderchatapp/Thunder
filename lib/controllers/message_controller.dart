@@ -35,12 +35,14 @@ class ChatMessageController extends ChangeNotifier {
   // Function to play the "sent" sound
   Future<void> _playSentSound() async {
     // Replace 'sent_sound.mp3' with the name of your audio file
+    await _audioPlayer.setVolume(1);
     await _audioPlayer.play(AssetSource('audio/pop.mp3'));
   }
 
   // Function to play the "sent" sound
   Future<void> _playReceiveSound() async {
     // Replace 'sent_sound.mp3' with the name of your audio file
+    await _audioPlayer.setVolume(1);
     await _audioPlayer.play(AssetSource('audio/receive.mp3'));
   }
 

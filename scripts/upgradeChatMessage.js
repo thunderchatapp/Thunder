@@ -13,13 +13,13 @@ async function main() {
         constructorArgs: ["0x412F1D5417a8288F570b4d4d93ACdE38910A8ba0"]
     });
 
-    // Call the setProfileContract function
-    const profileContractAddress = "0x0d4013F76a2663341B7cBdDf18CC43134C16A05b"; // The address of the profile contract you want to set
-    const tx = await contract.setProfileContract(profileContractAddress);
+    // // Call the setProfileContract function
+    // const profileContractAddress = "0x0d4013F76a2663341B7cBdDf18CC43134C16A05b"; // The address of the profile contract you want to set
+    // const tx = await contract.setProfileContract(profileContractAddress);
 
     // Wait for the transaction to be mined
-    await tx.wait();
-    console.log("Profile contract address set in ThunderChatMessageContract.");
+    // await tx.wait();
+    // console.log("Profile contract address set in ThunderChatMessageContract.");
     
   }
   

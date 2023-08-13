@@ -44,9 +44,10 @@ class ChatProfileController extends ChangeNotifier {
         name: "",
         description: "",
         photoURL: "",
+        publicKey: "",
         referrerCode: "",
         referredBy: "",
-        publicKey: "",
+        fcmToken: "",
         created: DateTime.now());
   }
 
@@ -71,12 +72,13 @@ class ChatProfileController extends ChangeNotifier {
       publicKey: result[0][5],
       referrerCode: result[0][6],
       referredBy: result[0][7],
+      fcmToken: result[0][8],
       created: DateTime.fromMillisecondsSinceEpoch(
-        int.parse(result[0][8].toString()) * 1000,
+        int.parse(result[0][9].toString()) * 1000,
       ),
     );
 
-    List<dynamic> friends = result[0][9];
+    List<dynamic> friends = result[0][10];
     List<FriendProfile> friendList = friends.map((item) {
       ChatMessage? lastChat;
       String lastMessage = "";
@@ -123,10 +125,11 @@ class ChatProfileController extends ChangeNotifier {
         publicKey: item[5],
         referrerCode: item[6],
         referredBy: item[7],
+        fcmToken: item[8],
         created: DateTime.fromMillisecondsSinceEpoch(
-            int.parse(item[8].toString()) * 1000),
-        isApproved: item[9],
-        isRequester: item[10],
+            int.parse(item[9].toString()) * 1000),
+        isApproved: item[10],
+        isRequester: item[11],
         added: DateTime.now(),
         lastMessage: lastMessage,
         lastMessageSent: lastSentMessage,
@@ -158,8 +161,9 @@ class ChatProfileController extends ChangeNotifier {
         publicKey: item[5],
         referrerCode: item[6],
         referredBy: item[7],
+        fcmToken: item[8],
         created: DateTime.fromMillisecondsSinceEpoch(
-          int.parse(result[0][8].toString()) * 1000,
+          int.parse(result[0][9].toString()) * 1000,
         ),
       );
 
@@ -207,8 +211,9 @@ class ChatProfileController extends ChangeNotifier {
           publicKey: item[5],
           referrerCode: item[6],
           referredBy: item[7],
+          fcmToken: item[8],
           created: DateTime.fromMillisecondsSinceEpoch(
-            int.parse(item[8].toString()) * 1000,
+            int.parse(item[9].toString()) * 1000,
           ),
         );
 
@@ -251,7 +256,7 @@ class ChatProfileController extends ChangeNotifier {
 
       debugPrint('Transaction is confirmed.');
     } catch (e) {
-      debugPrint('addToFriend: Error occurred: $e');
+      debugPrint('Update Profile: Error occurred: $e');
     }
   }
 
@@ -367,7 +372,6 @@ class ChatProfileController extends ChangeNotifier {
   createProfile(
       String userId,
       String name,
-      String description,
       String photoURL,
       String publicKey,
       String myAddress,
@@ -382,7 +386,7 @@ class ChatProfileController extends ChangeNotifier {
     debugPrint("currentNonce: $currentNonce");
 
     encodedCreateProfile = web3Helper.getEncodedCreateProfileData(
-        userId, name, description, photoURL, referredBy, publicKey, fcmToken);
+        userId, name, photoURL, referredBy, publicKey, fcmToken);
 
     String json = web3Helper.getDataToSign(currentNonce, myAddress,
         encodedCreateProfile, config.chatProfileProxyAddress);

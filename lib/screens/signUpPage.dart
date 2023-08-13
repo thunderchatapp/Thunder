@@ -387,6 +387,9 @@ class _SignUpScreenState extends State<SignUpPage> {
     debugPrint("description: $description");
     debugPrint("photoURL: $photoURL");
 
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    debugPrint("fcmToken: $fcmToken");
+
     bool userIdExists = await chatProfileController.checkUserIdExits(userId!);
 
     if (!(await fileProfile.exists())) {
@@ -405,9 +408,6 @@ class _SignUpScreenState extends State<SignUpPage> {
     }
 
     if (userIdExists) {
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      debugPrint("fcmToken: $fcmToken");
-
       await chatMessageController.getAllChatMessages(address);
       _futureChatProfile = chatProfileController.getProfileWithFriendList(
           address, chatMessageController);
@@ -428,19 +428,8 @@ class _SignUpScreenState extends State<SignUpPage> {
     } else {
       debugPrint("Profile not found!");
 
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      debugPrint("fcmToken: $fcmToken");
-
-      await chatProfileController.createProfile(
-          userId!,
-          name,
-          description,
-          photoURL!,
-          publicKey,
-          address.toString(),
-          referredBy,
-          privateKey,
-          fcmToken!);
+      await chatProfileController.createProfile(userId!, name, photoURL!,
+          publicKey, address.toString(), referredBy, privateKey, fcmToken!);
 
       //userIdExists = false;
       // while (!userIdExists) {
@@ -461,6 +450,7 @@ class _SignUpScreenState extends State<SignUpPage> {
             jsonEncode(chatMessageController.messagesToJson());
         final lastReadJson = jsonEncode(chatProfileController.lastReadToJson());
 
+        debugPrint("myProfileJson: $myProfileJson");
         fileProfile.writeAsString(myProfileJson);
         fileChat.writeAsString(chatMessagesJson);
         fileLastRead.writeAsString(lastReadJson);
