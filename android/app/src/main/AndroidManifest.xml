@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.thunder_chat">
+    package="com.thunder.chat">
     <uses-permission android:name="android.permission.INTERNET" /> 
    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 
    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
@@ -48,7 +48,7 @@
         <!-- note that the leading "/" is required for pathPrefix-->
         
                 <!-- Accept URIs: {YOUR_APP_PACKAGE_NAME}://* -->
-                <data android:scheme="w3a" android:host="com.example.thunder_chat" android:path="/auth" />
+                <data android:scheme="w3a" android:host="com.thunder.chat" android:path="/auth" />
                 <!-- Accept URIs: w3a://com.example.w3aflutter/auth -->
             </intent-filter>
         </activity>

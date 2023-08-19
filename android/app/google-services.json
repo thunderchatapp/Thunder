@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:972715634515:android:92b9b91b3615608dd2fba6",
         "android_client_info": {
-          "package_name": "com.example.thunder_chat"
+          "package_name": "com.thunder.chat"
         }
       },
       "oauth_client": [

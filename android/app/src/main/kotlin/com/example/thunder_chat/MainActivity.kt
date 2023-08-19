@@ -1,4 +1,4 @@
-package com.example.thunder_chat
+package com.thunder.chat
 
 import io.flutter.embedding.android.FlutterActivity
 
