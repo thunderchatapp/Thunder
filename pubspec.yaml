@@ -1,7 +1,8 @@
 name: thunder_chat
-description: Etherum powered blockchain chat system.
+description: Ethereum powered blockchain chat system.
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.1
+versionCode: 4
 
 environment:
   sdk: '>=2.19.6 <3.0.0'
@@ -34,6 +35,9 @@ dependencies:
   flutter_dynamic_icon: ^2.1.0
   uni_links: ^0.5.1
   app_links: ^3.4.3
+  package_info: ^2.0.2
+  image_picker: ^1.0.2
+  image: ^4.0.17
   
   
 
@@ -53,6 +57,7 @@ flutter:
       - artifacts/contracts/ThunderChatMessageContract.sol/ThunderChatMessageContract.json
       - assets/audio/
       - assets\thunder_logo.png
+      - assets\default_profile.png
       - assets\login-facebook.svg
       - assets\login-google.svg
       - assets\login-twitter.svg

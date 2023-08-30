@@ -38,8 +38,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     chatProfileController = Provider.of<ChatProfileController>(context);
     chatMessageController = Provider.of<ChatMessageController>(context);
-    chatProfileController.startListener();
-
+    chatProfileController.startListener(chatMessageController);
+    chatMessageController.startListener(
+      chatProfileController,
+    );
     // }
     return Scaffold(
       body: _screens[_currentIndex],
@@ -73,8 +75,11 @@ class _HomePageState extends State<HomePage> {
               ),
               child: ClipOval(
                 child: Image(
-                  image: NetworkImage(chatProfileController.myProfile
-                      .photoURL), // Replace with your network image URL
+                  image: chatProfileController.myProfile.photoURL.isEmpty
+                      ? AssetImage(
+                          'assets/default_profile.png') // Path to default image asset
+                      : NetworkImage(chatProfileController.myProfile.photoURL)
+                          as ImageProvider, // Use 'as ImageProvider' to cast the NetworkImage
                   fit: BoxFit.cover,
                 ),
               ),

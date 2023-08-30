@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:thunder_chat/appconfig.dart';
 import 'package:thunder_chat/controllers/profile_controller.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -10,8 +15,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final config = AppConfig();
   late ChatProfileController chatProfileController;
   bool isLoading = false;
+  bool isPhotoLoading = false;
   @override
   Widget build(BuildContext context) {
     chatProfileController = Provider.of<ChatProfileController>(context);
@@ -24,6 +31,56 @@ class _ProfilePageState extends State<ProfilePage> {
       text: chatProfileController.myProfile.description,
     );
 
+    // Method to upload image to IPFS (you'll need to implement this)
+    Future<String> uploadImageToIPFS(img.Image image) async {
+      final web3StorageEndpoint = config.web3StorageEndpoint;
+      final apiKey = config.Web3StorageApiKey;
+
+      final imageBytes = img.encodePng(image); // Convert the image to bytes
+
+      final response = await http.post(
+        Uri.parse(web3StorageEndpoint),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: imageBytes,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        final ipfsLink =
+            jsonResponse['cid']; // Assuming the API response contains the URL
+        return "https://$ipfsLink.ipfs.w3s.link/";
+      } else {
+        throw Exception('Failed to upload image to Web3.Storage');
+      }
+    }
+
+    Future<void> _selectAndUploadImage() async {
+      final pickedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedImage != null) {
+        setState(() {
+          isPhotoLoading = true;
+        });
+        final File imageFile = File(pickedImage.path);
+        final img.Image image = img.decodeImage(imageFile.readAsBytesSync())!;
+
+        // Resize the image
+        final img.Image resizedImage = img.copyResize(image, height: 256);
+
+        // Upload the resized image to IPFS
+        final ipfsLink = await uploadImageToIPFS(resizedImage);
+
+        // Update the user's profile picture using the IPFS link
+        setState(() {
+          chatProfileController.myProfile.photoURL = ipfsLink;
+          isPhotoLoading = false;
+        });
+      }
+    }
+
     Future<void> updateProfile() async {
       // Logic to update the user profile in your database
       // Replace this with your actual implementation using database update queries or API calls
@@ -31,7 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
       bool userNameExists = await chatProfileController
           .checkUserNameExits(userNameController.text);
 
-      if (userNameExists) {
+      if (userNameExists &&
+          userNameController.text != chatProfileController.myProfile.name) {
         Fluttertoast.showToast(
           msg: "Username already exists. Please try again.",
           toastLength: Toast.LENGTH_SHORT,
@@ -123,13 +181,27 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20),
+            GestureDetector(
+              onTap: _selectAndUploadImage, // Call the function when tapped
               child: Center(
-                child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(chatProfileController.myProfile.photoURL),
-                  maxRadius: 70,
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage:
+                          chatProfileController.myProfile.photoURL.isEmpty
+                              ? AssetImage('assets/default_profile.png')
+                              : NetworkImage(
+                                      chatProfileController.myProfile.photoURL)
+                                  as ImageProvider,
+                      maxRadius: 70,
+                    ),
+                    if (isPhotoLoading) // Display the loading indicator
+                      Positioned.fill(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),

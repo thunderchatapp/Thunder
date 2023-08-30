@@ -22,6 +22,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:io';
 import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+import 'package:uni_links/uni_links.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -56,6 +57,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
 
+StreamSubscription<String>? subscription;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -73,6 +76,25 @@ Future<void> main() async {
     sound: true,
   );
   runApp(const MainApp());
+  handleDeepLink();
+}
+
+String? referralCode = "";
+void handleDeepLink() async {
+  // Init UniLinks
+  try {
+    String? initialLink = await getInitialLink();
+    // Check if the app was opened with a deep link (referral link)
+    if (initialLink != null) {
+      Uri uri = Uri.parse(initialLink);
+      // Extract the referral code from the deep link
+      referralCode = uri.queryParameters['referrer'];
+      // Store the referral code locally or process it as needed
+      print('Referral Code: $referralCode');
+    }
+  } on Exception catch (e) {
+    print('Error handling deep link: $e');
+  }
 }
 
 class MainApp extends StatelessWidget {
@@ -141,6 +163,7 @@ class _CheckLoginState extends State<CheckLogin> {
 
     @override
     void dispose() {
+      subscription?.cancel();
       super.dispose();
     }
 
@@ -255,10 +278,6 @@ class _CheckLoginState extends State<CheckLogin> {
             loggedIn = true;
           });
         }
-
-        chatMessageController.startListener(
-          chatProfileController,
-        );
       } catch (error) {
         debugPrint(error.toString());
         setState(() {
@@ -267,6 +286,11 @@ class _CheckLoginState extends State<CheckLogin> {
         });
       }
     } else {
+      if (referralCode != null) {
+        await prefs.setString('thunderReferralCode', referralCode!);
+      } else {
+        await prefs.setString('thunderReferralCode', '');
+      }
       setState(() {
         loading = false;
         loggedIn = false;

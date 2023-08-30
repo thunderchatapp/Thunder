@@ -68,9 +68,9 @@ class _SignUpScreenState extends State<SignUpPage> {
     Uri redirectUrl;
 
     if (Platform.isAndroid) {
-      redirectUrl = Uri.parse('w3a://com.example.thunder_chat/auth');
+      redirectUrl = Uri.parse('w3a://com.thunder.chat/auth');
     } else if (Platform.isIOS) {
-      redirectUrl = Uri.parse('com.example.thunder_chat://openlogin');
+      redirectUrl = Uri.parse('com.thunder.chat://openlogin');
     } else {
       throw UnKnownException('Unknown platform');
     }
@@ -319,6 +319,7 @@ class _SignUpScreenState extends State<SignUpPage> {
       String privateKey = response.privKey.toString();
 
       await prefs.setString('thunderPrivateKey', privateKey);
+      final String? referredBy = prefs.getString('thunderPrivateKey');
 
       String? email = response.userInfo!.email;
       setState(() {
@@ -326,7 +327,7 @@ class _SignUpScreenState extends State<SignUpPage> {
       });
 
       await _setUp(privateKey, email, getEmailUserId(email!),
-          "I am using Thunder!", response.userInfo!.profileImage);
+          "I am using Thunder!", response.userInfo!.profileImage, referredBy!);
       await prefs.setString('thunderPrivateKey', privateKey);
     } on UserCancelledException {
       if (kDebugMode) {
@@ -357,7 +358,7 @@ class _SignUpScreenState extends State<SignUpPage> {
   }
 
   _setUp(String privateKey, String? userId, String name, String description,
-      String? photoURL) async {
+      String? photoURL, String referredBy) async {
     final client = Web3Client(config.rpcUrl, http.Client());
     final credentials = EthPrivateKey.fromHex(privateKey);
     final address = credentials.address;
@@ -426,10 +427,10 @@ class _SignUpScreenState extends State<SignUpPage> {
         fileLastRead.writeAsString(lastReadJson);
       });
     } else {
-      debugPrint("Profile not found!");
+      debugPrint("Profile not found! - Creating Profile");
 
       await chatProfileController.createProfile(userId!, name, photoURL!,
-          publicKey, address.toString(), referredBy, privateKey, fcmToken!);
+          publicKey, address.toString(), referredBy!, privateKey, fcmToken!);
 
       //userIdExists = false;
       // while (!userIdExists) {
@@ -437,7 +438,7 @@ class _SignUpScreenState extends State<SignUpPage> {
       //       const Duration(milliseconds: 1000)); // Add a delay before retrying
       //   userNameExists = await chatProfileController.checkUserNameExits(userId);
       // }
-      chatMessageController.getAllChatMessages(address);
+      await chatMessageController.getAllChatMessages(address);
       _futureChatProfile = chatProfileController.getProfileWithFriendList(
           address, chatMessageController);
 
@@ -456,8 +457,6 @@ class _SignUpScreenState extends State<SignUpPage> {
         fileLastRead.writeAsString(lastReadJson);
       });
     }
-
-    chatMessageController.startListener(chatProfileController);
   }
 
   String getEmailUserId(String email) {

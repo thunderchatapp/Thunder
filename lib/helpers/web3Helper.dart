@@ -173,7 +173,7 @@ class Web3Helper extends ChangeNotifier {
   }
 
   String getEncodedUpdateProfileData(
-      String name, String description, String photoURL) {
+      String name, String description, String photoURL, String fcmToken) {
     final updateProfileFunction =
         thunderChatProfileContract.abi.functions.firstWhere(
       (function) => function.name == 'updateProfile',
@@ -181,8 +181,8 @@ class Web3Helper extends ChangeNotifier {
           throw Exception('Function "updateProfile" not found in ABI'),
     );
 
-    final encodeFunction =
-        updateProfileFunction.encodeCall([name, description, photoURL]);
+    final encodeFunction = updateProfileFunction
+        .encodeCall([name, description, photoURL, fcmToken]);
 
     return "0x${hex.encode(encodeFunction)}";
   }

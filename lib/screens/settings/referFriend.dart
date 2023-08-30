@@ -128,7 +128,7 @@ class ReferFriendPage extends StatelessWidget {
               padding: EdgeInsets.all(20),
               child: Center(
                 child: Text(
-                  'Referrer Code',
+                  'Referral Code',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -145,7 +145,7 @@ class ReferFriendPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // Implement the share functionality here
-                  _shareMessage();
+                  //_shareMessage();
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(

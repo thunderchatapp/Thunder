@@ -10,6 +10,7 @@ import 'package:thunder_chat/screens/settings/referFriend.dart';
 import 'package:web3auth_flutter/input.dart';
 import 'package:thunder_chat/screens//signUpPage.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:package_info/package_info.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -49,6 +50,22 @@ class _SettingsPageState extends State<SettingsPage> {
         print("Unknown exception occurred");
       }
     };
+  }
+
+  String _appVersion = ''; // Store the app version
+
+  // Method to retrieve app version
+  Future<void> _getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = packageInfo.version;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getAppVersion(); // Call the method to retrieve app version
   }
 
   @override
@@ -117,7 +134,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(myList[index]['iconUrl']),
+                          image: myList[index]['iconUrl'].isEmpty
+                              ? AssetImage(
+                                  'assets/default_profile.png') // Path to default image asset
+                              : NetworkImage(myList[index]['iconUrl'])
+                                  as ImageProvider, // Use 'as ImageProvider' to cast the NetworkImage
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -184,7 +205,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           Text(
-            'App Version: 1.0.0 beta',
+            'App Version: $_appVersion', // Use the app version state variable
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

@@ -41,9 +41,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-<!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-        <data android:scheme="https"
-              android:host="drive.google.com"
+                
+                <data android:scheme="https" android:host="play.google.com" android:pathPattern="/apps/internaltest/.*" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data android:scheme="https"
+                    android:host="drive.google.com"
                />
         <!-- note that the leading "/" is required for pathPrefix-->
         

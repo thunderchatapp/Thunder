@@ -238,7 +238,10 @@ class ChatProfileController extends ChangeNotifier {
       debugPrint("currentNonce: $currentNonce");
 
       encodedUpdateProfile = web3Helper.getEncodedUpdateProfileData(
-          myProfile.name, myProfile.description, myProfile.photoURL);
+          myProfile.name,
+          myProfile.description,
+          myProfile.photoURL,
+          myProfile.fcmToken);
 
       String json = web3Helper.getDataToSign(currentNonce, myAddress,
           encodedUpdateProfile, config.chatProfileProxyAddress);
@@ -255,6 +258,7 @@ class ChatProfileController extends ChangeNotifier {
       await web3Helper.sendToAutoTask(requestEnvelope, config.autoTaskURL);
 
       debugPrint('Transaction is confirmed.');
+      notifyListeners();
     } catch (e) {
       debugPrint('Update Profile: Error occurred: $e');
     }
@@ -421,7 +425,7 @@ class ChatProfileController extends ChangeNotifier {
     await web3Helper.sendToAutoTask(requestEnveope, config.autoTaskURL);
   }
 
-  startListener() {
+  startListener(ChatMessageController messageController) {
     print("Start Listening to Profile");
 
     // delete friend 0xd928e5eaee8782e317467d0706f20a6f9c413f7834988a93b8cfd2be2cb08222
@@ -454,8 +458,8 @@ class ChatProfileController extends ChangeNotifier {
           debugPrint("My address found.");
           // Fetch the profile with friend list and wait for the result
 
-          var value =
-              await getProfileWithFriendList(myProfile.walletAddress, null);
+          var value = await getProfileWithFriendList(
+              myProfile.walletAddress, messageController);
 
           // Update the profile and notify listeners
           myProfile = value;
